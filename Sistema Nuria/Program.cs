@@ -16,7 +16,11 @@ namespace Sistema_Nuria
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            //Sintetizador.Decir("Iniciando grabacion en 3, 2, 1. Grabando...");
+
+            
+
+            Application.Run(new MainForm());
         }
     }
 }
