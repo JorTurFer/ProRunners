@@ -61,7 +61,7 @@
             // salirToolStripMenuItem
             // 
             this.salirToolStripMenuItem.Name = "salirToolStripMenuItem";
-            this.salirToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.salirToolStripMenuItem.Size = new System.Drawing.Size(96, 22);
             this.salirToolStripMenuItem.Text = "Salir";
             this.salirToolStripMenuItem.Click += new System.EventHandler(this.salirToolStripMenuItem_Click);
             // 
@@ -101,6 +101,7 @@
             this.hacerFotoToolStripMenuItem.Name = "hacerFotoToolStripMenuItem";
             this.hacerFotoToolStripMenuItem.Size = new System.Drawing.Size(77, 20);
             this.hacerFotoToolStripMenuItem.Text = "Hacer Foto";
+            this.hacerFotoToolStripMenuItem.Click += new System.EventHandler(this.hacerFotoToolStripMenuItem_Click);
             // 
             // visualizarToolStripMenuItem
             // 
@@ -134,7 +135,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 67F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(392, 67);
             this.tableLayoutPanel1.TabIndex = 1;
             // 

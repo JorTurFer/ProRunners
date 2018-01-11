@@ -62,6 +62,21 @@ namespace Sistema_Nuria
             }
         }
 
+        public static string GetRecordFolder(Paciente pac)
+        {
+            GenerateFoldersForDay(pac);
+            return $"{Properties.Settings.Default.strPathFiles}\\{Auxiliares.RebuildName(pac.Nombre)}_{pac.Nacimiento.ToString("dd-MM-yyyy")}\\{DateTime.Now.ToString("dd-MM-yyyy")}\\Videos";
+        }
+        public static string GetPictureFolder(Paciente pac)
+        {
+            GenerateFoldersForDay(pac);
+            return $"{Properties.Settings.Default.strPathFiles}\\{Auxiliares.RebuildName(pac.Nombre)}_{pac.Nacimiento.ToString("dd-MM-yyyy")}\\{DateTime.Now.ToString("dd-MM-yyyy")}\\Fotos";
+        }
+        public static string GetDayFolder(Paciente pac)
+        {
+            GenerateFoldersForDay(pac);
+            return $"{Properties.Settings.Default.strPathFiles}\\{Auxiliares.RebuildName(pac.Nombre)}_{pac.Nacimiento.ToString("dd-MM-yyyy")}\\{DateTime.Now.ToString("dd-MM-yyyy")}";
+        }
         public static bool GenerateFoldersForDay(Paciente pac)
         {
             try
