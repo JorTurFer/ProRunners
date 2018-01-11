@@ -23,7 +23,7 @@ namespace Sistema_Nuria
         private void GrabarForm_Load(object sender, EventArgs e)
         {
 
-            Program.CameraMgr2.FrameReviced += Cam2_FrameReviced;
+            Program.lstCameras[0].FrameReviced += Cam2_FrameReviced;
 
         }
 
@@ -42,16 +42,16 @@ namespace Sistema_Nuria
         private void button1_Click(object sender, EventArgs e)
         {
             btnStart.Enabled = false;
-            Program.CameraMgr2.StartGrab(Almacenamiento.GetDayFolder(m_Paciente));
-            Program.CameraMgr2.AccionTerminada.WaitOne();
+            Program.lstCameras[0].StartGrab(Almacenamiento.GetDayFolder(m_Paciente));
+            Program.lstCameras[0].AccionTerminada.WaitOne();
             btnStop.Enabled = true;
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             btnStop.Enabled = false;
-            Program.CameraMgr2.StopGrab();
-            Program.CameraMgr2.AccionTerminada.WaitOne();
+            Program.lstCameras[0].StopGrab();
+            Program.lstCameras[0].AccionTerminada.WaitOne();
             btnStart.Enabled = true;
         }
 
@@ -60,15 +60,15 @@ namespace Sistema_Nuria
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             btnSnap.Enabled = false;
 
-            Program.CameraMgr2.TakeSnapshot(Almacenamiento.GetDayFolder(m_Paciente));
-            Program.CameraMgr2.AccionTerminada.WaitOne();
+            Program.lstCameras[0].TakeSnapshot(Almacenamiento.GetDayFolder(m_Paciente));
+            Program.lstCameras[0].AccionTerminada.WaitOne();
             btnSnap.Enabled = true;
         }
 
         private void GrabarForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Program.CameraMgr2.StopGrab();
-            Program.CameraMgr2.FrameReviced -= Cam2_FrameReviced;
+            Program.lstCameras[0].StopGrab();
+            Program.lstCameras[0].FrameReviced -= Cam2_FrameReviced;
 
         }
     }

@@ -8,7 +8,7 @@ namespace Sistema_Nuria
 {
     static class Program
     {
-        public static CameraManager CameraMgr2;
+        public static List<CameraManager> lstCameras = new List<CameraManager>();
 
         /// <summary>
         /// Punto de entrada principal para la aplicación.
@@ -20,7 +20,7 @@ namespace Sistema_Nuria
             Application.SetCompatibleTextRenderingDefault(false);
             //Sintetizador.Decir("Iniciando grabacion en 3, 2, 1. Grabando...");
 
-            CameraMgr2 = new CameraManager(2);
+            lstCameras.Add(new CameraManager(2));
 
             Application.Run(new MainForm());
         }

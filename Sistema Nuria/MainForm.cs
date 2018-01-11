@@ -49,7 +49,7 @@ namespace Sistema_Nuria
 
         private void grabarVideoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!Program.CameraMgr2.Ready)
+            if (!Program.lstCameras[0].Ready)
             {
                 MessageBox.Show("Las camaras se estan conectando, espera un momento");
                 return;
@@ -68,6 +68,15 @@ namespace Sistema_Nuria
         private void hacerFotoToolStripMenuItem_Click(object sender, EventArgs e)
         {
           
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            foreach(var camera in Program.lstCameras)
+            {
+                camera.Dispose();
+            }
+            
         }
     }
 }
