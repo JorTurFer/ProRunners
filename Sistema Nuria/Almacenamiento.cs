@@ -16,13 +16,13 @@ namespace Sistema_Nuria
 
         static List<Paciente> m_lstPacientes = null;
 
-        public static List<Paciente> GetRecordedPacientes()
+        public static List<Paciente> GetRecordedPacientes(string strPaciente = "")
         {
             if (m_lstPacientes != null)
-                return m_lstPacientes;
+                return m_lstPacientes.Where(x=>x.Nombre.Contains(strPaciente,StringComparison.OrdinalIgnoreCase)).ToList();
             Regex reg = new Regex(@"(\d{1,2}-\d{1,2}-\d{4})");
             List<Paciente> tmp = new List<Paciente>();
-            foreach (var item in new DirectoryInfo($"{Properties.Settings.Default.strPathFiles}").GetDirectories())
+            foreach (var item in new DirectoryInfo($"{Properties.Settings.Default.strPathFiles}").GetDirectories().Where(x=>x.Name.Contains(strPaciente, StringComparison.OrdinalIgnoreCase)))
             {
                 Paciente pac = new Paciente();
                 string[] datos = item.Name.Split('_');

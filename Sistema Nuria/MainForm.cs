@@ -49,9 +49,16 @@ namespace Sistema_Nuria
 
         private void grabarVideoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!Program.lstCameras[0].Ready)
+            if (!Program.lstCameras[0].Ready || !Program.lstCameras[1].Ready)
             {
+                Sintetizador.DecirAsync("Las cámaras se estan conectando, espera un momento por favor");
                 MessageBox.Show("Las camaras se estan conectando, espera un momento");
+                return;
+            }
+            else if(m_Paciente == null)
+            {
+                Sintetizador.DecirAsync("Falta seleccionar paciente");
+                MessageBox.Show("Falta seleccionar paciente");
                 return;
             }
             using (GrabarForm grab = new GrabarForm(m_Paciente))
@@ -77,6 +84,14 @@ namespace Sistema_Nuria
                 camera.Dispose();
             }
             
+        }
+
+        private void visualizarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (TomasForm tomas = new TomasForm(m_Paciente?.Nombre))
+            {
+                tomas.ShowDialog();
+            }
         }
     }
 }

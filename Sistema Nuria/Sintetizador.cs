@@ -11,17 +11,20 @@ namespace Sistema_Nuria
         static SpeechSynthesizer m_Sintetizador = new SpeechSynthesizer();
 
         static Sintetizador()
-        {            
-            m_Sintetizador.SetOutputToDefaultAudioDevice();
+        {
+            if (Properties.Settings.Default.Synthesizer)
+                m_Sintetizador.SetOutputToDefaultAudioDevice();
         }
 
         public static void DecirAsync(string strFrase)
         {
-            m_Sintetizador.SpeakAsync(strFrase);
+            if (Properties.Settings.Default.Synthesizer)
+                m_Sintetizador.SpeakAsync(strFrase);
         }
         public static void Decir(string strFrase)
         {
-            m_Sintetizador.Speak(strFrase);
+            if (Properties.Settings.Default.Synthesizer)
+                m_Sintetizador.Speak(strFrase);
         }
     }
 }

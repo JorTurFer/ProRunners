@@ -9,6 +9,8 @@ namespace Sistema_Nuria
     enum ImageFormat : uint
     {
         Foto = 4,
-        Video = 6
+        FullHD = 6,
+        VideoHD = 9
+            //Video = 6
     }
 }

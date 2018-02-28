@@ -51,7 +51,7 @@ namespace Sistema_Nuria
             Init,
             Foto,
             StartVideo,
-            StopVideo,                  
+            StopVideo,
         }
 
         Thread m_threadCiclo;
@@ -72,7 +72,7 @@ namespace Sistema_Nuria
         public event FrameRecivedEventHandler FrameReviced;
         protected virtual void OnFrameRecived(FrameRecivedEventArgs e)
         {
-            if(m_bSnapShot)
+            if (m_bSnapShot)
             {
                 m_bSnapShot = false;
                 m_Camera.Acquisition.Stop();
@@ -89,43 +89,45 @@ namespace Sistema_Nuria
             uEye.Info.Camera.GetCameraList(out cameraList);
 
             m_Camera = new uEye.Camera();
-            m_DeviceID = (int)cameraList.Where(x => x.CameraID == 2).FirstOrDefault().DeviceID;
+            m_DeviceID = (int)cameraList.Where(x => x.CameraID == DevideID).FirstOrDefault().DeviceID;
             EnqueueAction(Acciones.Init);
             m_threadCiclo = new Thread(Cycle);
+            m_threadCiclo.IsBackground = true;
+            m_threadCiclo.Name = $"Camera {DevideID} thread";
             m_threadCiclo.Start();
         }
 
         ~CameraManager()
         {
-          
+
         }
 
         public bool Ready { get; set; }
 
         private void Cycle()
         {
-            while(!m_eventoSalir.WaitOne(100))
+            while (!m_eventoSalir.WaitOne(100))
             {
                 if (m_queueAcciones.Count == 0)
                     continue;
                 Acciones acc = m_queueAcciones.Dequeue();
-                switch(acc)
+                switch (acc)
                 {
                     case Acciones.Init:
                         Init();
-                        Ready = true;
+
                         break;
                     case Acciones.Foto:
                         SetImageFormat(ImageFormat.Foto);
                         m_bSnapShot = true;
                         var res = m_Camera.Acquisition.Capture();
-                        res = m_Camera.Image.Save($"{m_strPath}\\Fotos\\{DateTime.Now.ToString("HH.mm.ss dd_MM_yyyy")}.bmp", System.Drawing.Imaging.ImageFormat.Bmp);
+                        //res = m_Camera.Image.Save($"{m_strPath}\\Fotos\\{DateTime.Now.ToString("HH.mm.ss dd_MM_yyyy")}_{m_DeviceID}.Jpeg", System.Drawing.Imaging.ImageFormat.Jpeg);
 
                         break;
                     case Acciones.StartVideo:
-                        SetImageFormat(ImageFormat.Video);
+                        SetImageFormat(Properties.Settings.Default.FullHD? ImageFormat.FullHD : ImageFormat.VideoHD);
                         var res2 = m_Camera.Acquisition.Capture();
-                        res2 = m_Camera.Video.Start($"{m_strPath}\\Videos\\{DateTime.Now.ToString("HH.mm.ss dd_MM_yyyy")}.avi");
+                        res2 = m_Camera.Video.Start($"{m_strPath}\\Videos\\{DateTime.Now.ToString("HH.mm.ss dd_MM_yyyy")}_{m_DeviceID}.avi");
                         break;
                     case Acciones.StopVideo:
                         var res3 = m_Camera.Video.Stop();
@@ -151,7 +153,7 @@ namespace Sistema_Nuria
             if (statusRet == uEye.Defines.Status.SUCCESS)
             {
                 // start capture
-                statusRet = m_Camera.Acquisition.Freeze();
+                //statusRet = m_Camera.Acquisition.Freeze();
                 if (statusRet != uEye.Defines.Status.SUCCESS)
                 {
                     MessageBox.Show("Starting live video failed");
@@ -165,25 +167,22 @@ namespace Sistema_Nuria
             }
         }
 
-        
-
         private uEye.Defines.Status initCamera()
         {
             uEye.Defines.Status statusRet = uEye.Defines.Status.NO_SUCCESS;
 
+            statusRet = m_Camera.Init(m_DeviceID | (Int32)uEye.Defines.DeviceEnumeration.UseDeviceID, IntPtr.Zero);
+            if (statusRet != uEye.Defines.Status.SUCCESS)
             {
-                statusRet = m_Camera.Init(m_DeviceID | (Int32)uEye.Defines.DeviceEnumeration.UseDeviceID, IntPtr.Zero);
-                if (statusRet != uEye.Defines.Status.SUCCESS)
-                {
-                    MessageBox.Show("Initializing the camera failed");
-                    return statusRet;
-                }
-                SetImageFormat(ImageFormat.Foto);
-                // set event
-                m_Camera.EventFrame += onFrameEvent;
-
-
+                MessageBox.Show("Initializing the camera failed");
+                return statusRet;
             }
+            SetImageFormat(ImageFormat.Foto);
+            // set event
+            m_Camera.EventFrame += onFrameEvent;
+
+            Ready = true;
+
 
             return statusRet;
         }
@@ -212,17 +211,7 @@ namespace Sistema_Nuria
                     FrameRecivedEventArgs fe = new FrameRecivedEventArgs();
                     fe.frame = bitmap;
                     OnFrameRecived(fe);
-                    camera.Memory.Unlock(s32MemID);
-                    //if (bitmap != null && bitmap.PixelFormat != System.Drawing.Imaging.PixelFormat.Format8bppIndexed)
-                    //{
-                    //    Graphics graphics = Graphics.FromImage(bitmap);
-
-                    //    graphics.Dispose();
-                    //    bitmap.Dispose();
-
-                    //    camera.Memory.Unlock(s32MemID);
-                    //    camera.Display.Render(s32MemID, uEye.Defines.DisplayRenderMode.FitToWindow);
-                    //}
+                    camera.Memory.Unlock(s32MemID);                  
 
                     ++m_FrameCount;
                 }
@@ -234,6 +223,7 @@ namespace Sistema_Nuria
             m_strPath = strPath;
             EnqueueAction(Acciones.StartVideo);
         }
+
         public void StopGrab()
         {
             EnqueueAction(Acciones.StopVideo);
@@ -242,6 +232,10 @@ namespace Sistema_Nuria
         public void TakeSnapshot(string strPath)
         {
             m_strPath = strPath;
+            EnqueueAction(Acciones.Foto);
+        }
+        public void TakeSnapshot()
+        {
             EnqueueAction(Acciones.Foto);
         }
 
@@ -253,7 +247,7 @@ namespace Sistema_Nuria
                 {
                     var resu = m_Camera.Memory.Free(m_nMemoryID);
                 }
-                    
+
                 var res = m_Camera.Size.ImageFormat.Set((uint)formato);
                 res = m_Camera.Memory.Allocate(out m_nMemoryID, true);
                 //m_Camera.Memory.Allocate();
@@ -261,7 +255,7 @@ namespace Sistema_Nuria
             }
         }
 
-   
+
 
     }
 }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AgregarPaciente));
             this.lbl_Nombre = new System.Windows.Forms.Label();
             this.lbl_Date = new System.Windows.Forms.Label();
             this.txt_Name = new System.Windows.Forms.TextBox();
@@ -105,7 +106,10 @@
             this.Controls.Add(this.txt_Name);
             this.Controls.Add(this.lbl_Date);
             this.Controls.Add(this.lbl_Nombre);
+            this.Cursor = System.Windows.Forms.Cursors.No;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "AgregarPaciente";
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.ResumeLayout(false);
             this.PerformLayout();

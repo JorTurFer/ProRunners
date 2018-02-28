@@ -29,26 +29,67 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.timerLabel = new System.Windows.Forms.Timer(this.components);
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.archivoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.salirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pacienteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.registrarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.seleccionarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.grabarVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.hacerFotoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.visualizarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // timerLabel
             // 
             this.timerLabel.Enabled = true;
             this.timerLabel.Tick += new System.EventHandler(this.timerLabel_Tick);
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 24);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 67F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(392, 67);
+            this.tableLayoutPanel1.TabIndex = 1;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(3, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(386, 67);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "label1";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.BackgroundImage = global::Sistema_Nuria.Properties.Resources.video;
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.archivoToolStripMenuItem,
+            this.pacienteToolStripMenuItem,
+            this.grabarVideoToolStripMenuItem,
+            this.visualizarToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
+            this.menuStrip1.Size = new System.Drawing.Size(392, 24);
+            this.menuStrip1.TabIndex = 0;
+            this.menuStrip1.Text = "menuStrip1";
             // 
             // archivoToolStripMenuItem
             // 
@@ -61,7 +102,7 @@
             // salirToolStripMenuItem
             // 
             this.salirToolStripMenuItem.Name = "salirToolStripMenuItem";
-            this.salirToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.salirToolStripMenuItem.Size = new System.Drawing.Size(96, 22);
             this.salirToolStripMenuItem.Text = "Salir";
             this.salirToolStripMenuItem.Click += new System.EventHandler(this.salirToolStripMenuItem_Click);
             // 
@@ -96,60 +137,12 @@
             this.grabarVideoToolStripMenuItem.Text = "Grabar Video";
             this.grabarVideoToolStripMenuItem.Click += new System.EventHandler(this.grabarVideoToolStripMenuItem_Click);
             // 
-            // hacerFotoToolStripMenuItem
-            // 
-            this.hacerFotoToolStripMenuItem.Name = "hacerFotoToolStripMenuItem";
-            this.hacerFotoToolStripMenuItem.Size = new System.Drawing.Size(77, 20);
-            this.hacerFotoToolStripMenuItem.Text = "Hacer Foto";
-            this.hacerFotoToolStripMenuItem.Click += new System.EventHandler(this.hacerFotoToolStripMenuItem_Click);
-            // 
             // visualizarToolStripMenuItem
             // 
             this.visualizarToolStripMenuItem.Name = "visualizarToolStripMenuItem";
-            this.visualizarToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
-            this.visualizarToolStripMenuItem.Text = "Visualizar";
-            // 
-            // menuStrip1
-            // 
-            this.menuStrip1.BackgroundImage = global::Sistema_Nuria.Properties.Resources.video;
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.archivoToolStripMenuItem,
-            this.pacienteToolStripMenuItem,
-            this.grabarVideoToolStripMenuItem,
-            this.hacerFotoToolStripMenuItem,
-            this.visualizarToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.menuStrip1.Size = new System.Drawing.Size(392, 24);
-            this.menuStrip1.TabIndex = 0;
-            this.menuStrip1.Text = "menuStrip1";
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 24);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 67F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(392, 67);
-            this.tableLayoutPanel1.TabIndex = 1;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(3, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(386, 67);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "label1";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.visualizarToolStripMenuItem.Size = new System.Drawing.Size(63, 20);
+            this.visualizarToolStripMenuItem.Text = "Navegar";
+            this.visualizarToolStripMenuItem.Click += new System.EventHandler(this.visualizarToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -160,15 +153,16 @@
             this.ControlBox = false;
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -182,7 +176,6 @@
         private System.Windows.Forms.ToolStripMenuItem registrarToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem seleccionarToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem grabarVideoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem hacerFotoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem visualizarToolStripMenuItem;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;

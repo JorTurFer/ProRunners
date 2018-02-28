@@ -19,11 +19,21 @@ namespace Sistema_Nuria
         public SeleccionarPaciente()
         {
             InitializeComponent();
+            AutoCompleteStringCollection source = new AutoCompleteStringCollection();
+            source.AddRange(Almacenamiento.GetRecordedPacientes().Select(x => x.Nombre).ToArray());
+            txtFiltro.AutoCompleteCustomSource = source;
+            txtFiltro.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            txtFiltro.AutoCompleteSource = AutoCompleteSource.CustomSource;
         }
 
         private void SeleccionarPaciente_Load(object sender, EventArgs e)
         {
-            m_lstPacientes = Almacenamiento.GetRecordedPacientes().OrderBy(x=>x.Nombre).ToList();
+            LoadDatagrid();
+        }
+
+        void LoadDatagrid(string strPaciente = "")
+        {
+            m_lstPacientes = Almacenamiento.GetRecordedPacientes(strPaciente).OrderBy(x => x.Nombre).ToList();
             DataTable dt = new DataTable();
             dt.Columns.Add("Nombre");
             dt.Columns.Add("Edad", typeof(int));
@@ -64,6 +74,11 @@ namespace Sistema_Nuria
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             this.Close();
+        }
+
+        private void txtFiltro_TextChanged(object sender, EventArgs e)
+        {
+            LoadDatagrid(txtFiltro.Text);
         }
     }
 }

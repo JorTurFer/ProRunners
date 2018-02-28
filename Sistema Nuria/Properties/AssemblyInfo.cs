@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // La información general de un ensamblado se controla mediante el siguiente 
 // conjunto de atributos. Cambie estos valores de atributo para modificar la información
 // asociada con un ensamblado.
-[assembly: AssemblyTitle("Sistema Nuria")]
+[assembly: AssemblyTitle("Sistema de adquisicion")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Sistema Nuria")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyProduct("Sistema de adquisicion")]
+[assembly: AssemblyCopyright("Copyright ©  2017 Jorge Turrado Ferrero")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

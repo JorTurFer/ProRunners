@@ -25,10 +25,28 @@ namespace Sistema_Nuria.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("D:\\\\Prueba")]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Sistema Nuria")]
         public string strPathFiles {
             get {
                 return ((string)(this["strPathFiles"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FullHD {
+            get {
+                return ((bool)(this["FullHD"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Synthesizer {
+            get {
+                return ((bool)(this["Synthesizer"]));
             }
         }
     }

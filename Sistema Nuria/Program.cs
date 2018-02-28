@@ -18,8 +18,8 @@ namespace Sistema_Nuria
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            //Sintetizador.Decir("Iniciando grabacion en 3, 2, 1. Grabando...");
 
+            lstCameras.Add(new CameraManager(1));
             lstCameras.Add(new CameraManager(2));
 
             Application.Run(new MainForm());
