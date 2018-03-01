@@ -5,11 +5,14 @@
     <Setting Name="strPathFiles" Type="System.String" Scope="Application">
       <Value Profile="(Default)">D:\Sistema Nuria</Value>
     </Setting>
-    <Setting Name="FullHD" Type="System.Boolean" Scope="Application">
-      <Value Profile="(Default)">False</Value>
+    <Setting Name="VideoFormat" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3</Value>
     </Setting>
     <Setting Name="Synthesizer" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="VideoQuality" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">100</Value>
     </Setting>
   </Settings>
 </SettingsFile>

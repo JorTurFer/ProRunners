@@ -52,6 +52,8 @@ namespace Sistema_Nuria
             Foto,
             StartVideo,
             StopVideo,
+            SetFormatVideo,
+            SetFormatPhoto
         }
 
         Thread m_threadCiclo;
@@ -117,21 +119,24 @@ namespace Sistema_Nuria
                         Init();
 
                         break;
-                    case Acciones.Foto:
-                        SetImageFormat(ImageFormat.Foto);
+                    case Acciones.Foto:                       
                         m_bSnapShot = true;
                         var res = m_Camera.Acquisition.Capture();
                         //res = m_Camera.Image.Save($"{m_strPath}\\Fotos\\{DateTime.Now.ToString("HH.mm.ss dd_MM_yyyy")}_{m_DeviceID}.Jpeg", System.Drawing.Imaging.ImageFormat.Jpeg);
-
                         break;
-                    case Acciones.StartVideo:
-                        SetImageFormat(Properties.Settings.Default.FullHD? ImageFormat.FullHD : ImageFormat.VideoHD);
+                    case Acciones.StartVideo:                       
                         var res2 = m_Camera.Acquisition.Capture();
-                        res2 = m_Camera.Video.Start($"{m_strPath}\\Videos\\{DateTime.Now.ToString("HH.mm.ss dd_MM_yyyy")}_{m_DeviceID}.avi");
+                        //res2 = m_Camera.Video.Start($"{m_strPath}\\Videos\\{DateTime.Now.ToString("HH.mm.ss dd_MM_yyyy")}_{m_DeviceID}.avi");
                         break;
                     case Acciones.StopVideo:
-                        var res3 = m_Camera.Video.Stop();
-                        res3 = m_Camera.Acquisition.Stop();
+                        //var res3 = m_Camera.Video.Stop();
+                        var res3 = m_Camera.Acquisition.Stop();
+                        break;
+                    case Acciones.SetFormatPhoto:
+                        SetImageFormat(ImageFormat.Foto);
+                        break;
+                    case Acciones.SetFormatVideo:
+                        SetImageFormat(Properties.Settings.Default.VideoFormat.ToImageFormat());
                         break;
                 }
                 AccionTerminada.Set();
@@ -177,6 +182,13 @@ namespace Sistema_Nuria
                 MessageBox.Show("Initializing the camera failed");
                 return statusRet;
             }
+            //m_Camera.Parameter.Load(@"C:\Users\jorge\Desktop\IDS\cam0.ini");
+            uEye.DeviceFeatureJpegCompression compressor = new uEye.DeviceFeatureJpegCompression(m_Camera);
+            compressor.Set(100);
+            uEye.ColorConverter conv = new uEye.ColorConverter(m_Camera);
+            conv.Set(uEye.Defines.ColorMode.BGR8Packed, uEye.Defines.ColorConvertMode.Jpeg);
+
+
             SetImageFormat(ImageFormat.Foto);
             // set event
             m_Camera.EventFrame += onFrameEvent;
@@ -229,6 +241,15 @@ namespace Sistema_Nuria
             EnqueueAction(Acciones.StopVideo);
         }
 
+        public void SetVideo()
+        {
+            EnqueueAction(Acciones.SetFormatVideo);
+        }
+
+        public void SetPhoto()
+        {
+            EnqueueAction(Acciones.SetFormatPhoto);
+        }
         public void TakeSnapshot(string strPath)
         {
             m_strPath = strPath;

@@ -1,26 +1,87 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Windows.Forms;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.IO;
+using System.Linq;
+using System.Threading;
+// Contains common types for AVI format like FourCC
+using SharpAvi;
+// Contains types used for writing like AviWriter
+using SharpAvi.Output;
+// Contains types related to encoding like Mpeg4VideoEncoderVcm
+using SharpAvi.Codecs;
 
 namespace Sistema_Nuria
 {
     public partial class GrabarForm : Form
     {
+
+        [DllImport("kernel32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool GetPhysicallyInstalledSystemMemory(out long TotalMemoryInKilobytes);
+
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
+        static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr w, IntPtr l);
+        public void SetProgressState(ProgressBar pBar, int state)
+        {
+            SendMessage(pBar.Handle, 1040, (IntPtr)state, IntPtr.Zero);
+        }
+
+
+        private PerformanceCounter ramCounter;
+
+        const int N_CAMERAS = 2;
+        DriveInfo m_currentDrive = null;
+
         Paciente m_Paciente;
         bool m_bGrabing = false;
         bool[] m_bSaveImage = new bool[2];
+        Queue<byte[]>[] m_lstImages = new Queue<byte[]>[N_CAMERAS];
+        int m_nWidht;
+        int m_nHeight;
 
+        AutoResetEvent[] m_eventStartCompress = new AutoResetEvent[N_CAMERAS];
+        bool[] m_bCompressing = new bool[N_CAMERAS];
+        Thread[] m_threadAvi = new Thread[N_CAMERAS];
+        long[] m_lTotalFrames = new long[N_CAMERAS];
+        static int m_nThread;
+
+        DateTime m_DateStartGrab = DateTime.Now;
+        DateTime m_DateEndGrab;
 
         public GrabarForm(Paciente pac)
         {
             InitializeComponent();
+
+            m_nThread = 0;
+
+            int nIndexPuntos = Properties.Settings.Default.strPathFiles.IndexOf(':');
+            string strDriveNanme = Properties.Settings.Default.strPathFiles.Substring(0, nIndexPuntos);
+
+            m_currentDrive = DriveInfo.GetDrives().Where(x => x.Name.Contains(strDriveNanme)).First();
+
+            ramCounter = new PerformanceCounter("Memory", "Available MBytes", true);
+
+            long memKb;
+            GetPhysicallyInstalledSystemMemory(out memKb);
+            pb_Memory.Maximum = Convert.ToInt32(memKb / 1024);
+            pb_Memory.Value = Convert.ToInt32(ramCounter.NextValue());
+
+            pb_HDD.Maximum = Convert.ToInt32(m_currentDrive.TotalSize / 1024);
+            pb_HDD.Value = Convert.ToInt32(m_currentDrive.TotalFreeSpace / 1024);
+
+
+
             m_Paciente = pac;
+            for (int i = 0; i < m_lstImages.Length; i++)
+                m_lstImages[i] = new Queue<byte[]>();
+            for (int i = 0; i < m_eventStartCompress.Length; i++)
+                m_eventStartCompress[i] = new AutoResetEvent(false);
+
         }
 
         private void GrabarForm_Load(object sender, EventArgs e)
@@ -36,9 +97,11 @@ namespace Sistema_Nuria
             try
             {
                 SaveImage(e.frame, 1);
-                pict_Cam1.Invoke(new MethodInvoker(() => { pict_Cam1.Image = e.frame; }));
+                ImageToAvi(e.frame, 1);
+                m_lTotalFrames[1]++;
+                pict_Cam1.BeginInvoke(new MethodInvoker(() => { pict_Cam1.Image = e.frame; }));
             }
-            catch
+            catch (Exception ex)
             {
 
             }
@@ -49,9 +112,11 @@ namespace Sistema_Nuria
             try
             {
                 SaveImage(e.frame, 0);
-                pict_Cam0.Invoke(new MethodInvoker(() => { pict_Cam0.Image = e.frame; }));
+                ImageToAvi(e.frame, 0);
+                m_lTotalFrames[0]++;
+                pict_Cam0.BeginInvoke(new MethodInvoker(() => { pict_Cam0.Image = e.frame; }));
             }
-            catch
+            catch (Exception ex)
             {
 
             }
@@ -67,7 +132,7 @@ namespace Sistema_Nuria
 
         }
 
-       private void SaveImage(Bitmap bmp, int camIndex)
+        private void SaveImage(Bitmap bmp, int camIndex)
         {
             if (m_bSaveImage[camIndex])
             {
@@ -76,40 +141,142 @@ namespace Sistema_Nuria
             }
         }
 
+        private void ImageToAvi(Bitmap bmp, int camIndex)
+        {
+            if (m_bGrabing)
+            {
+                m_lstImages[camIndex].Enqueue(bmp.BitmapToByteArray(out m_nWidht, out m_nHeight));
+            }
+        }
+
         void SetRadioButtonsState(bool bEnabled)
         {
             rB_2.Enabled = rb_A.Enabled = rB_B.Enabled = bEnabled;
         }
 
+
+        void StartVideoMaker()
+        {
+
+
+
+
+        }
+
         private void pict_Grab_Click(object sender, EventArgs e)
         {
-            pict_Cam0.Image = new Bitmap(2000, 2500);
-            pict_Cam1.Image = new Bitmap(2000, 2500);
+
             if (!m_bGrabing)
             {
+                m_nThread = 0;
+                lbl_Time.Text = "00:00";
+                lbl_FPS_Display.Text = "0";
+                lbl_Counters.Visible = lbl_Images.Visible = lbl_FPS.Visible = lbl_FPS_Display.Visible = lbl_Duracion.Visible = lbl_Time.Visible = true;
                 pict_Grab.Image = Properties.Resources.stop;
                 SetRadioButtonsState(false);
-                if (rB_2.Checked || rb_A.Checked)
+                //Coloco en modo video
+                if (rB_2.Checked)
                 {
-                    Program.lstCameras[0].StartGrab(Almacenamiento.GetDayFolder(m_Paciente));
+                    Program.lstCameras[0].SetVideo();
+                    Program.lstCameras[0].AccionTerminada.WaitOne();
+                    Program.lstCameras[1].SetVideo();
+                    Program.lstCameras[1].AccionTerminada.WaitOne();
+                }
+                else if (rb_A.Checked)
+                {
+                    Program.lstCameras[0].SetVideo();
                     Program.lstCameras[0].AccionTerminada.WaitOne();
                 }
-                if (rB_2.Checked || rB_B.Checked)
+                else if (rB_B.Checked)
                 {
+                    Program.lstCameras[1].SetVideo();
+                    Program.lstCameras[1].AccionTerminada.WaitOne();
+                }
+
+                Sintetizador.Decir("La grabación comienza en 3... 2... 1...");
+
+                if (rB_2.Checked)
+                {
+                    for (int i = 0; i < m_threadAvi.Length; i++)
+                    {
+                        m_lTotalFrames[i] = 0;
+                        m_threadAvi[i] = new Thread(threadImageToAvi);
+                        m_threadAvi[i].Name = $"threadImageToAvi {i}";
+                        m_threadAvi[i].Start();
+                    }
+
+                    Program.lstCameras[0].StartGrab(Almacenamiento.GetDayFolder(m_Paciente));
+                    Program.lstCameras[0].AccionTerminada.WaitOne();
                     Program.lstCameras[1].StartGrab(Almacenamiento.GetDayFolder(m_Paciente));
                     Program.lstCameras[1].AccionTerminada.WaitOne();
                 }
+                else if (rb_A.Checked)
+                {
+
+                    m_lTotalFrames[0] = 0;
+                    m_threadAvi[0] = new Thread(threadImageToAvi);
+                    m_threadAvi[0].Name = $"threadImageToAvi {0}";
+                    m_threadAvi[0].Start();
+
+
+                    Program.lstCameras[0].StartGrab(Almacenamiento.GetDayFolder(m_Paciente));
+                    Program.lstCameras[0].AccionTerminada.WaitOne();
+                }
+                else if (rB_B.Checked)
+                {
+                    m_nThread = 1; //Cincelo esto para que coja que es el 1 si solo esta la camara 1
+                    m_lTotalFrames[1] = 0;
+                    m_threadAvi[1] = new Thread(threadImageToAvi);
+                    m_threadAvi[1].Name = $"threadImageToAvi {1}";
+                    m_threadAvi[1].Start();
+
+                    Program.lstCameras[1].StartGrab(Almacenamiento.GetDayFolder(m_Paciente));
+                    Program.lstCameras[1].AccionTerminada.WaitOne();
+                }
+                m_DateStartGrab = DateTime.Now;
+                m_bGrabing = true;
+                StartVideoMaker();
+
+
             }
             else
             {
+                m_bGrabing = false;
+                m_DateEndGrab = DateTime.Now;
+                lbl_Counters.Visible = lbl_Images.Visible = lbl_FPS.Visible = lbl_FPS_Display.Visible = lbl_Duracion.Visible = lbl_Time.Visible = false;
                 pict_Grab.Image = Properties.Resources.rec;
                 SetRadioButtonsState(true);
                 Program.lstCameras[0].StopGrab();
                 Program.lstCameras[0].AccionTerminada.WaitOne();
                 Program.lstCameras[1].StopGrab();
                 Program.lstCameras[1].AccionTerminada.WaitOne();
+
+                //new Thread(BitmapToAvi).Start();
+                try
+                {
+                    pict_Cam0.Image = new Bitmap(2000, 2000);
+                    pict_Cam1.Image = new Bitmap(2000, 2500);
+                }
+                catch
+                {
+
+                }
+                for (int i = 0; i < N_CAMERAS; i++)
+                {
+                    if (!m_bCompressing[i] && m_threadAvi[i] != null)
+                        m_eventStartCompress[i].Set();
+
+                }
+                for (int i = 0; i < N_CAMERAS; i++)
+                {
+                    if (m_threadAvi[i] != null)
+                        m_threadAvi[i].Join();
+                    m_threadAvi[i] = null;
+
+                }
+                //BitmapToAvi();
             }
-            m_bGrabing = !m_bGrabing;
+
         }
 
         private void pict_Photo_Click(object sender, EventArgs e)
@@ -121,18 +288,144 @@ namespace Sistema_Nuria
             m_bSaveImage[0] = true;
             m_bSaveImage[1] = true;
 
-            if (rB_2.Checked || rb_A.Checked)
+            if (rB_2.Checked)
+            {
+                Program.lstCameras[0].SetPhoto();
+                Program.lstCameras[0].AccionTerminada.WaitOne();
+                Program.lstCameras[1].SetPhoto();
+                Program.lstCameras[1].AccionTerminada.WaitOne();
+            }
+            else if (rb_A.Checked)
+            {
+                Program.lstCameras[0].SetPhoto();
+                Program.lstCameras[0].AccionTerminada.WaitOne();
+            }
+            else if (rB_B.Checked)
+            {
+                Program.lstCameras[1].SetPhoto();
+                Program.lstCameras[1].AccionTerminada.WaitOne();
+            }
+
+            if (rB_2.Checked)
+            {
+                Program.lstCameras[0].TakeSnapshot();
+                Program.lstCameras[0].AccionTerminada.WaitOne();
+                Program.lstCameras[1].TakeSnapshot();
+                Program.lstCameras[1].AccionTerminada.WaitOne();
+            }
+            else if (rb_A.Checked)
             {
                 Program.lstCameras[0].TakeSnapshot();
                 Program.lstCameras[0].AccionTerminada.WaitOne();
             }
-            if (rB_2.Checked || rB_B.Checked)
+            else if (rB_B.Checked)
             {
                 Program.lstCameras[1].TakeSnapshot();
                 Program.lstCameras[1].AccionTerminada.WaitOne();
-            }          
-           
+            }
+
+
+
             pict_Photo.Enabled = true;
+        }
+
+
+        private void threadImageToAvi()
+        {
+            int nCamIndex = m_nThread++;
+            m_bCompressing[nCamIndex] = false;
+            m_eventStartCompress[nCamIndex].WaitOne();
+            m_bCompressing[nCamIndex] = true;
+            var frameRate = Convert.ToDecimal(m_lstImages[nCamIndex].Count() / (m_DateEndGrab - m_DateStartGrab).TotalSeconds);
+            var writer = new AviWriter($"{Almacenamiento.GetDayFolder(m_Paciente)}\\Videos\\{DateTime.Now.ToString("HH.mm.ss dd_MM_yyyy")}_{nCamIndex}.avi")
+            {
+                FramesPerSecond = frameRate,
+                // Emitting AVI v1 index in addition to OpenDML index (AVI v2)
+                // improves compatibility with some software, including 
+                // standard Windows programs like Media Player and File Explorer
+                EmitIndex1 = true
+            };
+
+            var encoder = new MotionJpegVideoEncoderWpf(m_nWidht, m_nHeight, Properties.Settings.Default.VideoQuality);
+            var stream = writer.AddEncodingVideoStream(encoder, width: m_nWidht, height: m_nHeight);
+            stream.Width = m_nWidht;
+            stream.Height = m_nHeight;
+
+
+            while (m_lstImages[nCamIndex].Count > 0 || m_bGrabing)
+            {
+                byte[] frameData = new byte[0];
+                try
+                {
+                    frameData = m_lstImages[nCamIndex].Dequeue();
+                }
+                catch (InvalidOperationException ex) //Salta si cola vacia
+                {
+                    Thread.Sleep(1000);
+                    continue;
+                }
+                stream.WriteFrame(true, // is key frame? (many codecs use concept of key frames, for others - all frames are keys)
+                              frameData, // array with frame data
+                              0, // starting index in the array
+                              frameData.Length); // length of the data
+
+            }
+            writer.Close();
+
+
+        }
+
+        double CustomiceProgressBar(ProgressBar currentProgress)
+        {
+            double lfPercentage = Math.Round((((double)(currentProgress.Value - currentProgress.Minimum) / (double)(currentProgress.Maximum - currentProgress.Minimum)) * 100), 2);
+
+
+            if (lfPercentage < 10 && Convert.ToInt32(currentProgress.Tag) != 2)
+            {
+                SetProgressState(currentProgress, 2);
+                currentProgress.Tag = 2;
+            }
+            else if (lfPercentage < 25 && Convert.ToInt32(currentProgress.Tag) != 3)
+            {
+                SetProgressState(currentProgress, 3);
+                currentProgress.Tag = 3;
+            }
+            else if (Convert.ToInt32(currentProgress.Tag) != 1)
+            {
+                SetProgressState(currentProgress, 1);
+                currentProgress.Tag = 1;
+
+            }
+            return lfPercentage;
+        }
+
+
+        private void MemoryTimer_Tick(object sender, EventArgs e)
+        {
+            lbl_Counters.Text = $"{m_lstImages[0].Count}--{m_lstImages[1].Count}";
+
+            pb_Memory.Value = Convert.ToInt32(ramCounter.NextValue());
+            pb_HDD.Value = Convert.ToInt32(m_currentDrive.TotalFreeSpace / 1024);
+            TimeSpan timeDiff = DateTime.Now - m_DateStartGrab;
+            lbl_Time.Text = timeDiff.ToString(@"mm\:ss");
+            lbl_FPS_Display.Text = $"{Math.Round(m_lTotalFrames[0] / timeDiff.TotalSeconds, 1)}--{Math.Round(m_lTotalFrames[1] / timeDiff.TotalSeconds, 1)}";
+
+            CustomiceProgressBar(pb_HDD);
+            double lfRamPercentage = CustomiceProgressBar(pb_Memory);
+
+            if (m_bGrabing && lfRamPercentage < 5)
+                pict_Grab_Click(null, null);
+
+            if (m_bGrabing && timeDiff.TotalSeconds > 15)
+            {
+                for (int i = 0; i < m_eventStartCompress.Length; i++)
+                    if (!m_bCompressing[i] && m_threadAvi[i] != null)
+                    {
+                        m_DateEndGrab = DateTime.Now;
+                        m_eventStartCompress[i].Set();
+                    }
+
+            }
         }
     }
 }

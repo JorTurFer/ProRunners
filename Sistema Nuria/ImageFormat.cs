@@ -10,7 +10,8 @@ namespace Sistema_Nuria
     {
         Foto = 4,
         FullHD = 6,
-        VideoHD = 9
+        VideoHD = 9,
+        InterHD = 20
             //Video = 6
     }
 }

@@ -28,16 +28,30 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GrabarForm));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.pict_Cam1 = new System.Windows.Forms.PictureBox();
             this.pict_Cam0 = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lbl_FPS_Display = new System.Windows.Forms.Label();
+            this.lbl_FPS = new System.Windows.Forms.Label();
+            this.lbl_Time = new System.Windows.Forms.Label();
+            this.lbl_Duracion = new System.Windows.Forms.Label();
+            this.lbl_Avance = new System.Windows.Forms.Label();
+            this.pb_ToAvi = new System.Windows.Forms.ProgressBar();
+            this.label2 = new System.Windows.Forms.Label();
+            this.pb_HDD = new System.Windows.Forms.ProgressBar();
+            this.label1 = new System.Windows.Forms.Label();
+            this.pb_Memory = new System.Windows.Forms.ProgressBar();
             this.pict_Photo = new System.Windows.Forms.PictureBox();
             this.pict_Grab = new System.Windows.Forms.PictureBox();
             this.rB_B = new System.Windows.Forms.RadioButton();
             this.rb_A = new System.Windows.Forms.RadioButton();
             this.rB_2 = new System.Windows.Forms.RadioButton();
+            this.MemoryTimer = new System.Windows.Forms.Timer(this.components);
+            this.lbl_Counters = new System.Windows.Forms.Label();
+            this.lbl_Images = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pict_Cam1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pict_Cam0)).BeginInit();
@@ -88,6 +102,18 @@
             // groupBox1
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.groupBox1, 2);
+            this.groupBox1.Controls.Add(this.lbl_Counters);
+            this.groupBox1.Controls.Add(this.lbl_Images);
+            this.groupBox1.Controls.Add(this.lbl_FPS_Display);
+            this.groupBox1.Controls.Add(this.lbl_FPS);
+            this.groupBox1.Controls.Add(this.lbl_Time);
+            this.groupBox1.Controls.Add(this.lbl_Duracion);
+            this.groupBox1.Controls.Add(this.lbl_Avance);
+            this.groupBox1.Controls.Add(this.pb_ToAvi);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.pb_HDD);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.pb_Memory);
             this.groupBox1.Controls.Add(this.pict_Photo);
             this.groupBox1.Controls.Add(this.pict_Grab);
             this.groupBox1.Controls.Add(this.rB_B);
@@ -99,6 +125,99 @@
             this.groupBox1.Size = new System.Drawing.Size(1165, 116);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
+            // 
+            // lbl_FPS_Display
+            // 
+            this.lbl_FPS_Display.AutoSize = true;
+            this.lbl_FPS_Display.Location = new System.Drawing.Point(1084, 92);
+            this.lbl_FPS_Display.Name = "lbl_FPS_Display";
+            this.lbl_FPS_Display.Size = new System.Drawing.Size(0, 13);
+            this.lbl_FPS_Display.TabIndex = 16;
+            this.lbl_FPS_Display.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbl_FPS_Display.Visible = false;
+            // 
+            // lbl_FPS
+            // 
+            this.lbl_FPS.AutoSize = true;
+            this.lbl_FPS.Location = new System.Drawing.Point(1035, 92);
+            this.lbl_FPS.Name = "lbl_FPS";
+            this.lbl_FPS.Size = new System.Drawing.Size(24, 13);
+            this.lbl_FPS.TabIndex = 15;
+            this.lbl_FPS.Text = "Fps";
+            this.lbl_FPS.Visible = false;
+            // 
+            // lbl_Time
+            // 
+            this.lbl_Time.AutoSize = true;
+            this.lbl_Time.Location = new System.Drawing.Point(878, 92);
+            this.lbl_Time.Name = "lbl_Time";
+            this.lbl_Time.Size = new System.Drawing.Size(0, 13);
+            this.lbl_Time.TabIndex = 14;
+            this.lbl_Time.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbl_Time.Visible = false;
+            // 
+            // lbl_Duracion
+            // 
+            this.lbl_Duracion.AutoSize = true;
+            this.lbl_Duracion.Location = new System.Drawing.Point(817, 92);
+            this.lbl_Duracion.Name = "lbl_Duracion";
+            this.lbl_Duracion.Size = new System.Drawing.Size(50, 13);
+            this.lbl_Duracion.TabIndex = 13;
+            this.lbl_Duracion.Text = "Duracion";
+            this.lbl_Duracion.Visible = false;
+            // 
+            // lbl_Avance
+            // 
+            this.lbl_Avance.AutoSize = true;
+            this.lbl_Avance.Location = new System.Drawing.Point(806, 67);
+            this.lbl_Avance.Name = "lbl_Avance";
+            this.lbl_Avance.Size = new System.Drawing.Size(64, 13);
+            this.lbl_Avance.TabIndex = 12;
+            this.lbl_Avance.Text = "Procesando";
+            this.lbl_Avance.Visible = false;
+            // 
+            // pb_ToAvi
+            // 
+            this.pb_ToAvi.Location = new System.Drawing.Point(876, 67);
+            this.pb_ToAvi.Name = "pb_ToAvi";
+            this.pb_ToAvi.Size = new System.Drawing.Size(261, 17);
+            this.pb_ToAvi.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.pb_ToAvi.TabIndex = 11;
+            this.pb_ToAvi.Visible = false;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(823, 44);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(45, 13);
+            this.label2.TabIndex = 10;
+            this.label2.Text = "Espacio";
+            // 
+            // pb_HDD
+            // 
+            this.pb_HDD.Location = new System.Drawing.Point(876, 44);
+            this.pb_HDD.Name = "pb_HDD";
+            this.pb_HDD.Size = new System.Drawing.Size(261, 17);
+            this.pb_HDD.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.pb_HDD.TabIndex = 9;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(823, 21);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(47, 13);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Memoria";
+            // 
+            // pb_Memory
+            // 
+            this.pb_Memory.Location = new System.Drawing.Point(876, 21);
+            this.pb_Memory.Name = "pb_Memory";
+            this.pb_Memory.Size = new System.Drawing.Size(261, 17);
+            this.pb_Memory.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.pb_Memory.TabIndex = 7;
             // 
             // pict_Photo
             // 
@@ -154,6 +273,32 @@
             this.rB_2.Text = "Dos cámaras";
             this.rB_2.UseVisualStyleBackColor = true;
             // 
+            // MemoryTimer
+            // 
+            this.MemoryTimer.Enabled = true;
+            this.MemoryTimer.Interval = 500;
+            this.MemoryTimer.Tick += new System.EventHandler(this.MemoryTimer_Tick);
+            // 
+            // lbl_Counters
+            // 
+            this.lbl_Counters.AutoSize = true;
+            this.lbl_Counters.Location = new System.Drawing.Point(976, 92);
+            this.lbl_Counters.Name = "lbl_Counters";
+            this.lbl_Counters.Size = new System.Drawing.Size(0, 13);
+            this.lbl_Counters.TabIndex = 18;
+            this.lbl_Counters.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbl_Counters.Visible = false;
+            // 
+            // lbl_Images
+            // 
+            this.lbl_Images.AutoSize = true;
+            this.lbl_Images.Location = new System.Drawing.Point(927, 92);
+            this.lbl_Images.Name = "lbl_Images";
+            this.lbl_Images.Size = new System.Drawing.Size(27, 13);
+            this.lbl_Images.TabIndex = 17;
+            this.lbl_Images.Text = "Img:";
+            this.lbl_Images.Visible = false;
+            // 
             // GrabarForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -189,5 +334,18 @@
         private System.Windows.Forms.RadioButton rB_2;
         private System.Windows.Forms.PictureBox pict_Photo;
         private System.Windows.Forms.PictureBox pict_Grab;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ProgressBar pb_Memory;
+        private System.Windows.Forms.Timer MemoryTimer;
+        private System.Windows.Forms.Label lbl_Avance;
+        private System.Windows.Forms.ProgressBar pb_ToAvi;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ProgressBar pb_HDD;
+        private System.Windows.Forms.Label lbl_Time;
+        private System.Windows.Forms.Label lbl_Duracion;
+        private System.Windows.Forms.Label lbl_FPS_Display;
+        private System.Windows.Forms.Label lbl_FPS;
+        private System.Windows.Forms.Label lbl_Counters;
+        private System.Windows.Forms.Label lbl_Images;
     }
 }

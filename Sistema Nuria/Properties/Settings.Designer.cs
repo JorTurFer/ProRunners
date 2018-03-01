@@ -34,10 +34,10 @@ namespace Sistema_Nuria.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool FullHD {
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int VideoFormat {
             get {
-                return ((bool)(this["FullHD"]));
+                return ((int)(this["VideoFormat"]));
             }
         }
         
@@ -47,6 +47,15 @@ namespace Sistema_Nuria.Properties {
         public bool Synthesizer {
             get {
                 return ((bool)(this["Synthesizer"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int VideoQuality {
+            get {
+                return ((int)(this["VideoQuality"]));
             }
         }
     }

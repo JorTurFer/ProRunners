@@ -19,6 +19,8 @@ namespace Sistema_Nuria
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            bool x64 = Environment.Is64BitProcess;
+
             lstCameras.Add(new CameraManager(1));
             lstCameras.Add(new CameraManager(2));
 
