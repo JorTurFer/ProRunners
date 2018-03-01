@@ -153,7 +153,7 @@ namespace Sistema_Nuria
         {
             rB_2.Enabled = rb_A.Enabled = rB_B.Enabled = bEnabled;
         }
-        
+
 
         private void pict_Grab_Click(object sender, EventArgs e)
         {
@@ -163,7 +163,8 @@ namespace Sistema_Nuria
                 m_nThread = 0;
                 lbl_Time.Text = "00:00";
                 lbl_FPS_Display.Text = "0";
-                lbl_Counters.Visible = lbl_Images.Visible = lbl_FPS.Visible = lbl_FPS_Display.Visible = lbl_Duracion.Visible = lbl_Time.Visible = true;
+                lbl_Duracion.Visible = lbl_Time.Visible = true;
+                lbl_Counters.Visible = lbl_Images.Visible = lbl_FPS.Visible = lbl_FPS_Display.Visible = Properties.Settings.Default.bDebug;
                 pict_Grab.Image = Properties.Resources.stop;
                 SetRadioButtonsState(false);
                 //Coloco en modo video
@@ -391,7 +392,7 @@ namespace Sistema_Nuria
 
         private void MemoryTimer_Tick(object sender, EventArgs e)
         {
-            lbl_Counters.Text = $"{m_lstImages[0].Count}--{m_lstImages[1].Count}";
+            lbl_Counters.Text = $"{m_lstImages[0].Count}({m_lTotalFrames[0]})--{m_lstImages[1].Count}({m_lTotalFrames[1]})";
 
             pb_Memory.Value = Convert.ToInt32(ramCounter.NextValue());
             pb_HDD.Value = Convert.ToInt32(m_currentDrive.TotalFreeSpace / 1024);
@@ -402,10 +403,7 @@ namespace Sistema_Nuria
             CustomiceProgressBar(pb_HDD);
             double lfRamPercentage = CustomiceProgressBar(pb_Memory);
 
-            if (m_bGrabing && lfRamPercentage < 5)
-                pict_Grab_Click(null, null);
-
-            if (m_bGrabing && timeDiff.TotalSeconds > 15)
+            if (m_bGrabing && (timeDiff.TotalSeconds > 60 || lfRamPercentage < 5))
             {
                 for (int i = 0; i < m_eventStartCompress.Length; i++)
                     if (!m_bCompressing[i] && m_threadAvi[i] != null)

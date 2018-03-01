@@ -58,5 +58,14 @@ namespace Sistema_Nuria.Properties {
                 return ((int)(this["VideoQuality"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool bDebug {
+            get {
+                return ((bool)(this["bDebug"]));
+            }
+        }
     }
 }

@@ -38,8 +38,6 @@
             this.lbl_FPS = new System.Windows.Forms.Label();
             this.lbl_Time = new System.Windows.Forms.Label();
             this.lbl_Duracion = new System.Windows.Forms.Label();
-            this.lbl_Avance = new System.Windows.Forms.Label();
-            this.pb_ToAvi = new System.Windows.Forms.ProgressBar();
             this.label2 = new System.Windows.Forms.Label();
             this.pb_HDD = new System.Windows.Forms.ProgressBar();
             this.label1 = new System.Windows.Forms.Label();
@@ -108,8 +106,6 @@
             this.groupBox1.Controls.Add(this.lbl_FPS);
             this.groupBox1.Controls.Add(this.lbl_Time);
             this.groupBox1.Controls.Add(this.lbl_Duracion);
-            this.groupBox1.Controls.Add(this.lbl_Avance);
-            this.groupBox1.Controls.Add(this.pb_ToAvi);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.pb_HDD);
             this.groupBox1.Controls.Add(this.label1);
@@ -139,7 +135,7 @@
             // lbl_FPS
             // 
             this.lbl_FPS.AutoSize = true;
-            this.lbl_FPS.Location = new System.Drawing.Point(1035, 92);
+            this.lbl_FPS.Location = new System.Drawing.Point(1008, 92);
             this.lbl_FPS.Name = "lbl_FPS";
             this.lbl_FPS.Size = new System.Drawing.Size(24, 13);
             this.lbl_FPS.TabIndex = 15;
@@ -149,7 +145,7 @@
             // lbl_Time
             // 
             this.lbl_Time.AutoSize = true;
-            this.lbl_Time.Location = new System.Drawing.Point(878, 92);
+            this.lbl_Time.Location = new System.Drawing.Point(879, 69);
             this.lbl_Time.Name = "lbl_Time";
             this.lbl_Time.Size = new System.Drawing.Size(0, 13);
             this.lbl_Time.TabIndex = 14;
@@ -159,31 +155,12 @@
             // lbl_Duracion
             // 
             this.lbl_Duracion.AutoSize = true;
-            this.lbl_Duracion.Location = new System.Drawing.Point(817, 92);
+            this.lbl_Duracion.Location = new System.Drawing.Point(818, 69);
             this.lbl_Duracion.Name = "lbl_Duracion";
             this.lbl_Duracion.Size = new System.Drawing.Size(50, 13);
             this.lbl_Duracion.TabIndex = 13;
             this.lbl_Duracion.Text = "Duracion";
             this.lbl_Duracion.Visible = false;
-            // 
-            // lbl_Avance
-            // 
-            this.lbl_Avance.AutoSize = true;
-            this.lbl_Avance.Location = new System.Drawing.Point(806, 67);
-            this.lbl_Avance.Name = "lbl_Avance";
-            this.lbl_Avance.Size = new System.Drawing.Size(64, 13);
-            this.lbl_Avance.TabIndex = 12;
-            this.lbl_Avance.Text = "Procesando";
-            this.lbl_Avance.Visible = false;
-            // 
-            // pb_ToAvi
-            // 
-            this.pb_ToAvi.Location = new System.Drawing.Point(876, 67);
-            this.pb_ToAvi.Name = "pb_ToAvi";
-            this.pb_ToAvi.Size = new System.Drawing.Size(261, 17);
-            this.pb_ToAvi.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
-            this.pb_ToAvi.TabIndex = 11;
-            this.pb_ToAvi.Visible = false;
             // 
             // label2
             // 
@@ -282,7 +259,7 @@
             // lbl_Counters
             // 
             this.lbl_Counters.AutoSize = true;
-            this.lbl_Counters.Location = new System.Drawing.Point(976, 92);
+            this.lbl_Counters.Location = new System.Drawing.Point(890, 92);
             this.lbl_Counters.Name = "lbl_Counters";
             this.lbl_Counters.Size = new System.Drawing.Size(0, 13);
             this.lbl_Counters.TabIndex = 18;
@@ -292,7 +269,7 @@
             // lbl_Images
             // 
             this.lbl_Images.AutoSize = true;
-            this.lbl_Images.Location = new System.Drawing.Point(927, 92);
+            this.lbl_Images.Location = new System.Drawing.Point(841, 92);
             this.lbl_Images.Name = "lbl_Images";
             this.lbl_Images.Size = new System.Drawing.Size(27, 13);
             this.lbl_Images.TabIndex = 17;
@@ -337,8 +314,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ProgressBar pb_Memory;
         private System.Windows.Forms.Timer MemoryTimer;
-        private System.Windows.Forms.Label lbl_Avance;
-        private System.Windows.Forms.ProgressBar pb_ToAvi;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ProgressBar pb_HDD;
         private System.Windows.Forms.Label lbl_Time;
