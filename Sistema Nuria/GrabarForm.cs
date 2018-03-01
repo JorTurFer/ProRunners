@@ -153,15 +153,7 @@ namespace Sistema_Nuria
         {
             rB_2.Enabled = rb_A.Enabled = rB_B.Enabled = bEnabled;
         }
-
-
-        void StartVideoMaker()
-        {
-
-
-
-
-        }
+        
 
         private void pict_Grab_Click(object sender, EventArgs e)
         {
@@ -235,9 +227,6 @@ namespace Sistema_Nuria
                 }
                 m_DateStartGrab = DateTime.Now;
                 m_bGrabing = true;
-                StartVideoMaker();
-
-
             }
             else
             {
