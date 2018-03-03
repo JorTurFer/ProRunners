@@ -11,7 +11,7 @@ namespace Sistema_Nuria
 
         static Almacenamiento()
         {
-            m_lstPacientes= GetRecordedPacientes();
+            m_lstPacientes = GetRecordedPacientes();
         }
 
         static List<Paciente> m_lstPacientes = null;
@@ -19,10 +19,10 @@ namespace Sistema_Nuria
         public static List<Paciente> GetRecordedPacientes(string strPaciente = "")
         {
             if (m_lstPacientes != null)
-                return m_lstPacientes.Where(x=>x.Nombre.Contains(strPaciente,StringComparison.OrdinalIgnoreCase)).ToList();
+                return m_lstPacientes.Where(x => x.Nombre.Contains(strPaciente, StringComparison.OrdinalIgnoreCase)).ToList();
             Regex reg = new Regex(@"(\d{1,2}-\d{1,2}-\d{4})");
             List<Paciente> tmp = new List<Paciente>();
-            foreach (var item in new DirectoryInfo($"{Properties.Settings.Default.strPathFiles}").GetDirectories().Where(x=>x.Name.Contains(strPaciente, StringComparison.OrdinalIgnoreCase)))
+            foreach (var item in new DirectoryInfo($"{Directorios.ObtenerSubdirectorioDeAplicacion("Datos")}").GetDirectories().Where(x => x.Name.Contains(strPaciente, StringComparison.OrdinalIgnoreCase)))
             {
                 Paciente pac = new Paciente();
                 string[] datos = item.Name.Split('_');
@@ -65,23 +65,27 @@ namespace Sistema_Nuria
         public static string GetRecordFolder(Paciente pac)
         {
             GenerateFoldersForDay(pac);
-            return $"{Properties.Settings.Default.strPathFiles}\\{Auxiliares.RebuildName(pac.Nombre)}_{pac.Nacimiento.ToString("dd-MM-yyyy")}\\{DateTime.Now.ToString("dd-MM-yyyy")}\\Videos";
+            if (!pac.SesionesVideo.Contains(DateTime.Now.Date))
+                pac.SesionesVideo.Add(DateTime.Now.Date);
+            return $"{Directorios.ObtenerSubdirectorioDeAplicacion("Datos")}\\{Auxiliares.RebuildName(pac.Nombre)}_{pac.Nacimiento.ToString("dd-MM-yyyy")}\\{DateTime.Now.ToString("dd-MM-yyyy")}\\Videos";
         }
         public static string GetPictureFolder(Paciente pac)
         {
             GenerateFoldersForDay(pac);
-            return $"{Properties.Settings.Default.strPathFiles}\\{Auxiliares.RebuildName(pac.Nombre)}_{pac.Nacimiento.ToString("dd-MM-yyyy")}\\{DateTime.Now.ToString("dd-MM-yyyy")}\\Fotos";
+            if (!pac.SesionesFoto.Contains(DateTime.Now.Date))
+                pac.SesionesFoto.Add(DateTime.Now.Date);
+            return $"{Directorios.ObtenerSubdirectorioDeAplicacion("Datos")}\\{Auxiliares.RebuildName(pac.Nombre)}_{pac.Nacimiento.ToString("dd-MM-yyyy")}\\{DateTime.Now.ToString("dd-MM-yyyy")}\\Fotos";
         }
         public static string GetDayFolder(Paciente pac)
         {
             GenerateFoldersForDay(pac);
-            return $"{Properties.Settings.Default.strPathFiles}\\{Auxiliares.RebuildName(pac.Nombre)}_{pac.Nacimiento.ToString("dd-MM-yyyy")}\\{DateTime.Now.ToString("dd-MM-yyyy")}";
+            return $"{Directorios.ObtenerSubdirectorioDeAplicacion("Datos")}\\{Auxiliares.RebuildName(pac.Nombre)}_{pac.Nacimiento.ToString("dd-MM-yyyy")}\\{DateTime.Now.ToString("dd-MM-yyyy")}";
         }
         public static bool GenerateFoldersForDay(Paciente pac)
         {
             try
             {
-                string strBasePath = $"{Properties.Settings.Default.strPathFiles}\\{Auxiliares.RebuildName(pac.Nombre)}_{pac.Nacimiento.ToString("dd-MM-yyyy")}\\{DateTime.Now.ToString("dd-MM-yyyy")}";
+                string strBasePath = $"{Directorios.ObtenerSubdirectorioDeAplicacion("Datos")}\\{Auxiliares.RebuildName(pac.Nombre)}_{pac.Nacimiento.ToString("dd-MM-yyyy")}\\{DateTime.Now.ToString("dd-MM-yyyy")}";
 
                 if (!Directory.Exists(strBasePath + "\\Videos"))
                     Directory.CreateDirectory(strBasePath + "\\Videos");

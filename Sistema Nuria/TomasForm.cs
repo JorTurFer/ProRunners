@@ -96,7 +96,7 @@ namespace Sistema_Nuria
             TreeNode nodeDia = lstNodes.Where(x => x.Tag.ToString() == "Dia").FirstOrDefault();
 
             StringBuilder sbPath = new StringBuilder();
-            sbPath.Append(Properties.Settings.Default.strPathFiles);
+            sbPath.Append(Directorios.ObtenerSubdirectorioDeAplicacion("Datos"));
             if (nodeNombre != null)
                 sbPath.Append($@"\{nodeNombre.Text}");          
             if (nodeDia != null)

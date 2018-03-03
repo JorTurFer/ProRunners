@@ -24,11 +24,11 @@ namespace Sistema_Nuria
             if(DateTime.TryParse(txt_Date.Text, out m_Nacimiento))
             {
                 lbl_Date.ForeColor = Color.Black;
+                btn_Aceptar.Enabled = lbl_Nombre.ForeColor == Color.Black;
             }
             else
             {
                 lbl_Date.ForeColor = Color.Red;
-                btn_Aceptar.Enabled = lbl_Nombre.ForeColor == Color.Black;
             }
         }
 

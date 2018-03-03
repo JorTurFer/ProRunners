@@ -58,9 +58,9 @@ namespace Sistema_Nuria
             InitializeComponent();
 
             m_nThread = 0;
-
-            int nIndexPuntos = Properties.Settings.Default.strPathFiles.IndexOf(':');
-            string strDriveNanme = Properties.Settings.Default.strPathFiles.Substring(0, nIndexPuntos);
+            
+            int nIndexPuntos = Application.StartupPath.IndexOf(':');
+            string strDriveNanme = Application.StartupPath.Substring(0, nIndexPuntos);
 
             m_currentDrive = DriveInfo.GetDrives().Where(x => x.Name.Contains(strDriveNanme)).First();
 
@@ -137,7 +137,7 @@ namespace Sistema_Nuria
             if (m_bSaveImage[camIndex])
             {
                 m_bSaveImage[camIndex] = false;
-                bmp.Save($"{Almacenamiento.GetDayFolder(m_Paciente)}\\Fotos\\{DateTime.Now.ToString("HH.mm.ss dd_MM_yyyy")}_{camIndex}.Jpeg", System.Drawing.Imaging.ImageFormat.Jpeg);
+                bmp.Save($"{Almacenamiento.GetPictureFolder(m_Paciente)}\\{DateTime.Now.ToString("HH.mm.ss dd_MM_yyyy")}_{camIndex}.Jpeg", System.Drawing.Imaging.ImageFormat.Jpeg);
             }
         }
 
@@ -160,6 +160,10 @@ namespace Sistema_Nuria
 
             if (!m_bGrabing)
             {
+
+                pict_Cam0.Image = new Bitmap(2000, 2500);
+                pict_Cam1.Image = new Bitmap(2000, 2500);
+
                 m_nThread = 0;
                 lbl_Time.Text = "00:00";
                 lbl_FPS_Display.Text = "0";
@@ -186,8 +190,6 @@ namespace Sistema_Nuria
                     Program.lstCameras[1].AccionTerminada.WaitOne();
                 }
 
-                Sintetizador.Decir("La grabación comienza en 3... 2... 1...");
-
                 if (rB_2.Checked)
                 {
                     for (int i = 0; i < m_threadAvi.Length; i++)
@@ -207,6 +209,7 @@ namespace Sistema_Nuria
                 {
 
                     m_lTotalFrames[0] = 0;
+                    m_lTotalFrames[1] = 0;
                     m_threadAvi[0] = new Thread(threadImageToAvi);
                     m_threadAvi[0].Name = $"threadImageToAvi {0}";
                     m_threadAvi[0].Start();
@@ -218,6 +221,7 @@ namespace Sistema_Nuria
                 else if (rB_B.Checked)
                 {
                     m_nThread = 1; //Cincelo esto para que coja que es el 1 si solo esta la camara 1
+                    m_lTotalFrames[0] = 0;
                     m_lTotalFrames[1] = 0;
                     m_threadAvi[1] = new Thread(threadImageToAvi);
                     m_threadAvi[1].Name = $"threadImageToAvi {1}";
@@ -271,6 +275,9 @@ namespace Sistema_Nuria
 
         private void pict_Photo_Click(object sender, EventArgs e)
         {
+            if (m_bGrabing)
+                return;
+
             pict_Cam0.SizeMode = PictureBoxSizeMode.StretchImage;
             pict_Cam0.Image = new Bitmap(2000, 2500);
             pict_Cam1.Image = new Bitmap(2000, 2500);
@@ -327,7 +334,7 @@ namespace Sistema_Nuria
             m_eventStartCompress[nCamIndex].WaitOne();
             m_bCompressing[nCamIndex] = true;
             var frameRate = Convert.ToDecimal(m_lstImages[nCamIndex].Count() / (m_DateEndGrab - m_DateStartGrab).TotalSeconds);
-            var writer = new AviWriter($"{Almacenamiento.GetDayFolder(m_Paciente)}\\Videos\\{DateTime.Now.ToString("HH.mm.ss dd_MM_yyyy")}_{nCamIndex}.avi")
+            var writer = new AviWriter($"{Almacenamiento.GetRecordFolder(m_Paciente)}\\{DateTime.Now.ToString("HH.mm.ss dd_MM_yyyy")}_{nCamIndex}.avi")
             {
                 FramesPerSecond = frameRate,
                 // Emitting AVI v1 index in addition to OpenDML index (AVI v2)
@@ -403,7 +410,7 @@ namespace Sistema_Nuria
             CustomiceProgressBar(pb_HDD);
             double lfRamPercentage = CustomiceProgressBar(pb_Memory);
 
-            if (m_bGrabing && (timeDiff.TotalSeconds > 60 || lfRamPercentage < 5))
+            if (m_bGrabing && (timeDiff.TotalSeconds > Properties.Settings.Default.nSecondsToStart || lfRamPercentage < Properties.Settings.Default.nMinimunRamToStart))
             {
                 for (int i = 0; i < m_eventStartCompress.Length; i++)
                     if (!m_bCompressing[i] && m_threadAvi[i] != null)

@@ -51,13 +51,11 @@ namespace Sistema_Nuria
         {
             if (!Program.lstCameras[0].Ready || !Program.lstCameras[1].Ready)
             {
-                Sintetizador.DecirAsync("Las cámaras se estan conectando, espera un momento por favor");
                 MessageBox.Show("Las camaras se estan conectando, espera un momento");
                 return;
             }
             else if(m_Paciente == null)
             {
-                Sintetizador.DecirAsync("Falta seleccionar paciente");
                 MessageBox.Show("Falta seleccionar paciente");
                 return;
             }

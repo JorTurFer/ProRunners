@@ -58,6 +58,7 @@ namespace Sistema_Nuria
 
         Thread m_threadCiclo;
         ManualResetEvent m_eventoSalir = new ManualResetEvent(false);
+        AutoResetEvent m_eventoAccion = new AutoResetEvent(false);
         public AutoResetEvent AccionTerminada { get; set; }
         uEye.Camera m_Camera;
         int m_DeviceID;
@@ -108,38 +109,55 @@ namespace Sistema_Nuria
 
         private void Cycle()
         {
-            while (!m_eventoSalir.WaitOne(100))
-            {
-                if (m_queueAcciones.Count == 0)
-                    continue;
-                Acciones acc = m_queueAcciones.Dequeue();
-                switch (acc)
-                {
-                    case Acciones.Init:
-                        Init();
+            WaitHandle[] waitevents = new WaitHandle[2];
+            waitevents[0] = m_eventoAccion;
+            waitevents[1] = m_eventoSalir;
 
-                        break;
-                    case Acciones.Foto:                       
-                        m_bSnapShot = true;
-                        var res = m_Camera.Acquisition.Capture();
-                        //res = m_Camera.Image.Save($"{m_strPath}\\Fotos\\{DateTime.Now.ToString("HH.mm.ss dd_MM_yyyy")}_{m_DeviceID}.Jpeg", System.Drawing.Imaging.ImageFormat.Jpeg);
-                        break;
-                    case Acciones.StartVideo:                       
-                        var res2 = m_Camera.Acquisition.Capture();
-                        //res2 = m_Camera.Video.Start($"{m_strPath}\\Videos\\{DateTime.Now.ToString("HH.mm.ss dd_MM_yyyy")}_{m_DeviceID}.avi");
-                        break;
-                    case Acciones.StopVideo:
-                        //var res3 = m_Camera.Video.Stop();
-                        var res3 = m_Camera.Acquisition.Stop();
-                        break;
-                    case Acciones.SetFormatPhoto:
-                        SetImageFormat(ImageFormat.Foto);
-                        break;
-                    case Acciones.SetFormatVideo:
-                        SetImageFormat(Properties.Settings.Default.VideoFormat.ToImageFormat());
-                        break;
+            bool bSeguir = true;
+
+            while (bSeguir)
+            {
+
+                int nEvent = WaitHandle.WaitAny(waitevents, 500);
+
+                if (nEvent == 0)
+                {
+
+                    if (m_queueAcciones.Count == 0)
+                        continue;
+                    Acciones acc = m_queueAcciones.Dequeue();
+                    switch (acc)
+                    {
+                        case Acciones.Init:
+                            Init();
+
+                            break;
+                        case Acciones.Foto:
+                            m_bSnapShot = true;
+                            var res = m_Camera.Acquisition.Capture();
+                            //res = m_Camera.Image.Save($"{m_strPath}\\Fotos\\{DateTime.Now.ToString("HH.mm.ss dd_MM_yyyy")}_{m_DeviceID}.Jpeg", System.Drawing.Imaging.ImageFormat.Jpeg);
+                            break;
+                        case Acciones.StartVideo:
+                            var res2 = m_Camera.Acquisition.Capture();
+                            //res2 = m_Camera.Video.Start($"{m_strPath}\\Videos\\{DateTime.Now.ToString("HH.mm.ss dd_MM_yyyy")}_{m_DeviceID}.avi");
+                            break;
+                        case Acciones.StopVideo:
+                            //var res3 = m_Camera.Video.Stop();
+                            var res3 = m_Camera.Acquisition.Stop();
+                            break;
+                        case Acciones.SetFormatPhoto:
+                            SetImageFormat(ImageFormat.Foto);
+                            break;
+                        case Acciones.SetFormatVideo:
+                            SetImageFormat(Properties.Settings.Default.VideoFormat.ToImageFormat());
+                            break;
+                    }
+                    AccionTerminada.Set();
                 }
-                AccionTerminada.Set();
+                else if(nEvent == 1)
+                {
+                    bSeguir = false;
+                }
             }
             m_Camera.Exit();
         }
@@ -148,6 +166,7 @@ namespace Sistema_Nuria
         {
             AccionTerminada.Reset();
             m_queueAcciones.Enqueue(acc);
+            m_eventoAccion.Set();
         }
 
         private void Init()

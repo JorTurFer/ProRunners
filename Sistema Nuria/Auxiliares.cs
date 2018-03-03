@@ -14,7 +14,7 @@ namespace Sistema_Nuria
         public static string RebuildName(string strInput)
         {
             StringBuilder sb = new StringBuilder();
-            foreach (string item in strInput.Split(' '))
+            foreach (string item in strInput.Trim().Split(' '))
             {
                 string tmp = item.ToLower();
                 sb.Append(tmp.First().ToString().ToUpper() + tmp.Substring(1) + " ");

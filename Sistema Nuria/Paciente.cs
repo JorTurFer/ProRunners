@@ -15,7 +15,7 @@ namespace Sistema_Nuria
         {
             get
             {
-                return (DateTime.Now.Year - Nacimiento.Year);
+                return DateTime.Today.AddTicks(-Nacimiento.Ticks).Year - 1;
             }
         }
         public List<DateTime> SesionesVideo { get; set; }

@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 // La información general de un ensamblado se controla mediante el siguiente 
 // conjunto de atributos. Cambie estos valores de atributo para modificar la información
 // asociada con un ensamblado.
-[assembly: AssemblyTitle("Sistema de adquisicion")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("ProRunners")]
+[assembly: AssemblyDescription("Sistema de adquisición de imagenes")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Sistema de adquisicion")]
+[assembly: AssemblyCompany("Akari")]
+[assembly: AssemblyProduct("ProRunners")]
 [assembly: AssemblyCopyright("Copyright ©  2017 Jorge Turrado Ferrero")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyTrademark("Akari")]
 [assembly: AssemblyCulture("")]
 
 // Si establece ComVisible en false, los tipos de este ensamblado no estarán visibles 

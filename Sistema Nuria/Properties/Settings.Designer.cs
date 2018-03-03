@@ -25,15 +25,6 @@ namespace Sistema_Nuria.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Sistema Nuria")]
-        public string strPathFiles {
-            get {
-                return ((string)(this["strPathFiles"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("3")]
         public int VideoFormat {
             get {
@@ -65,6 +56,24 @@ namespace Sistema_Nuria.Properties {
         public bool bDebug {
             get {
                 return ((bool)(this["bDebug"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public int nSecondsToStart {
+            get {
+                return ((int)(this["nSecondsToStart"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int nMinimunRamToStart {
+            get {
+                return ((int)(this["nMinimunRamToStart"]));
             }
         }
     }
