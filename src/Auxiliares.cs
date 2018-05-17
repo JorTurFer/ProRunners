@@ -7,8 +7,15 @@ using System.Text;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace Sistema_Nuria
+namespace ProRunners
 {
+    enum CameraIndex
+    {
+      All,
+      Cam1,
+      Cam2
+    }
+    
     static class Auxiliares
     {
         public static string RebuildName(string strInput)

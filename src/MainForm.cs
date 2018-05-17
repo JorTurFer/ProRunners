@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Sistema_Nuria
+namespace ProRunners
 {
     public partial class MainForm : Form
     {
@@ -49,7 +49,7 @@ namespace Sistema_Nuria
 
         private void grabarVideoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!Program.lstCameras[0].Ready || !Program.lstCameras[1].Ready)
+            if (CameraMgr.IsReady)
             {
                 MessageBox.Show("Las camaras se estan conectando, espera un momento");
                 return;
@@ -77,11 +77,7 @@ namespace Sistema_Nuria
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            foreach(var camera in Program.lstCameras)
-            {
-                camera.Dispose();
-            }
-            
+            CameraMgr.CloseCameras();            
         }
 
         private void visualizarToolStripMenuItem_Click(object sender, EventArgs e)

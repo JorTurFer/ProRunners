@@ -4,7 +4,7 @@ using System.Linq;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace Sistema_Nuria
+namespace ProRunners
 {
     static class Almacenamiento
     {

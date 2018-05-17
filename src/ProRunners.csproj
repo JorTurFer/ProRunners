@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{5579C0A9-AEA6-4D80-9630-0ADDB279684C}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Sistema_Nuria</RootNamespace>
+    <RootNamespace>ProRunners</RootNamespace>
     <AssemblyName>ProRunners</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -64,7 +64,8 @@
     </Compile>
     <Compile Include="Almacenamiento.cs" />
     <Compile Include="Auxiliares.cs" />
-    <Compile Include="CameraManager.cs" />
+    <Compile Include="Camera.cs" />
+    <Compile Include="CameraMgr.cs" />
     <Compile Include="Directorios.cs" />
     <Compile Include="FrameRecivedEventArgs.cs" />
     <Compile Include="GrabarForm.cs">

@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using System.Linq;
 using System.Threading;
 
-namespace Sistema_Nuria
+namespace ProRunners
 {
   class Camera : IDisposable
   {
@@ -50,6 +50,9 @@ namespace Sistema_Nuria
     public AutoResetEvent AccionTerminada { get; set; }
     uEye.Camera m_Camera;
 
+    static uEye.Types.CameraInformation[] m_cameraList;
+
+    public CameraIndex ID { get; private set; }
     int m_DeviceID;
     int m_FrameCount;
     int m_nMemoryID = -1;
@@ -73,15 +76,18 @@ namespace Sistema_Nuria
       FrameReviced?.Invoke(e);
     }
 
-    public Camera(int DevideID)
+    public Camera(CameraIndex DevideID)
     {
+      ID = DevideID;
       Ready = false;
       AccionTerminada = new AutoResetEvent(false);
-      uEye.Types.CameraInformation[] cameraList;
-      uEye.Info.Camera.GetCameraList(out cameraList);
+
+      //Si no he obtenido la lista de camaras, la obtengo
+      if (m_cameraList == null)
+        uEye.Info.Camera.GetCameraList(out m_cameraList);
 
       m_Camera = new uEye.Camera();
-      m_DeviceID = (int)cameraList.Where(x => x.CameraID == DevideID).FirstOrDefault().DeviceID;
+      m_DeviceID = (int)m_cameraList.Where(x => x.CameraID == (int)DevideID).FirstOrDefault().DeviceID;
       EnqueueAction(Acciones.Init);
       m_threadCiclo = new Thread(Cycle);
       m_threadCiclo.IsBackground = true;

@@ -14,7 +14,7 @@ using SharpAvi.Output;
 // Contains types related to encoding like Mpeg4VideoEncoderVcm
 using SharpAvi.Codecs;
 
-namespace Sistema_Nuria
+namespace ProRunners
 {
     public partial class GrabarForm : Form
     {
@@ -86,10 +86,8 @@ namespace Sistema_Nuria
 
         private void GrabarForm_Load(object sender, EventArgs e)
         {
-
-            Program.lstCameras[0].FrameReviced += Cam0_FrameReviced;
-            Program.lstCameras[1].FrameReviced += Cam1_FrameReviced;
-
+            CameraMgr.GetCamera(CameraIndex.Cam1).FrameReviced += Cam0_FrameReviced;
+            CameraMgr.GetCamera(CameraIndex.Cam2).FrameReviced += Cam1_FrameReviced;
         }
 
         private void Cam1_FrameReviced(FrameRecivedEventArgs e)
@@ -124,12 +122,9 @@ namespace Sistema_Nuria
 
         private void GrabarForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Program.lstCameras[0].StopGrab();
-            Program.lstCameras[1].StopGrab();
-            Program.lstCameras[0].FrameReviced -= Cam0_FrameReviced;
-            Program.lstCameras[1].FrameReviced -= Cam1_FrameReviced;
-
-
+            CameraMgr.StopGrab();
+            CameraMgr.GetCamera(CameraIndex.Cam1).FrameReviced -= Cam0_FrameReviced;
+            CameraMgr.GetCamera(CameraIndex.Cam2).FrameReviced -= Cam1_FrameReviced;
         }
 
         private void SaveImage(Bitmap bmp, int camIndex)
@@ -174,20 +169,15 @@ namespace Sistema_Nuria
                 //Coloco en modo video
                 if (rB_2.Checked)
                 {
-                    Program.lstCameras[0].SetVideo();
-                    Program.lstCameras[0].AccionTerminada.WaitOne();
-                    Program.lstCameras[1].SetVideo();
-                    Program.lstCameras[1].AccionTerminada.WaitOne();
+                    CameraMgr.SetVideo(CameraIndex.All);
                 }
                 else if (rb_A.Checked)
                 {
-                    Program.lstCameras[0].SetVideo();
-                    Program.lstCameras[0].AccionTerminada.WaitOne();
+                    CameraMgr.SetVideo(CameraIndex.Cam1);
                 }
                 else if (rB_B.Checked)
                 {
-                    Program.lstCameras[1].SetVideo();
-                    Program.lstCameras[1].AccionTerminada.WaitOne();
+                    CameraMgr.SetVideo(CameraIndex.Cam2);
                 }
 
                 if (rB_2.Checked)
@@ -199,11 +189,7 @@ namespace Sistema_Nuria
                         m_threadAvi[i].Name = $"threadImageToAvi {i}";
                         m_threadAvi[i].Start();
                     }
-
-                    Program.lstCameras[0].StartGrab(Almacenamiento.GetDayFolder(m_Paciente));
-                    Program.lstCameras[0].AccionTerminada.WaitOne();
-                    Program.lstCameras[1].StartGrab(Almacenamiento.GetDayFolder(m_Paciente));
-                    Program.lstCameras[1].AccionTerminada.WaitOne();
+                    CameraMgr.StartGrab(CameraIndex.All,Almacenamiento.GetDayFolder(m_Paciente));                    
                 }
                 else if (rb_A.Checked)
                 {
@@ -215,8 +201,7 @@ namespace Sistema_Nuria
                     m_threadAvi[0].Start();
 
 
-                    Program.lstCameras[0].StartGrab(Almacenamiento.GetDayFolder(m_Paciente));
-                    Program.lstCameras[0].AccionTerminada.WaitOne();
+                    CameraMgr.StartGrab(CameraIndex.Cam1, Almacenamiento.GetDayFolder(m_Paciente));
                 }
                 else if (rB_B.Checked)
                 {
@@ -227,8 +212,8 @@ namespace Sistema_Nuria
                     m_threadAvi[1].Name = $"threadImageToAvi {1}";
                     m_threadAvi[1].Start();
 
-                    Program.lstCameras[1].StartGrab(Almacenamiento.GetDayFolder(m_Paciente));
-                    Program.lstCameras[1].AccionTerminada.WaitOne();
+                  CameraMgr.StartGrab(CameraIndex.Cam2, Almacenamiento.GetDayFolder(m_Paciente));
+
                 }
                 m_DateStartGrab = DateTime.Now;
                 m_bGrabing = true;
@@ -240,10 +225,7 @@ namespace Sistema_Nuria
                 lbl_Counters.Visible = lbl_Images.Visible = lbl_FPS.Visible = lbl_FPS_Display.Visible = lbl_Duracion.Visible = lbl_Time.Visible = false;
                 pict_Grab.Image = Properties.Resources.rec;
                 SetRadioButtonsState(true);
-                Program.lstCameras[0].StopGrab();
-                Program.lstCameras[0].AccionTerminada.WaitOne();
-                Program.lstCameras[1].StopGrab();
-                Program.lstCameras[1].AccionTerminada.WaitOne();
+                CameraMgr.StopGrab();
 
                 //new Thread(BitmapToAvi).Start();
                 try
@@ -287,41 +269,19 @@ namespace Sistema_Nuria
 
             if (rB_2.Checked)
             {
-                Program.lstCameras[0].SetPhoto();
-                Program.lstCameras[0].AccionTerminada.WaitOne();
-                Program.lstCameras[1].SetPhoto();
-                Program.lstCameras[1].AccionTerminada.WaitOne();
+                CameraMgr.SetPhoto(CameraIndex.All);
+                CameraMgr.TakeSnapshot(CameraIndex.All);
             }
             else if (rb_A.Checked)
             {
-                Program.lstCameras[0].SetPhoto();
-                Program.lstCameras[0].AccionTerminada.WaitOne();
+                CameraMgr.SetPhoto(CameraIndex.Cam1);
+                CameraMgr.TakeSnapshot(CameraIndex.Cam1);
             }
             else if (rB_B.Checked)
             {
-                Program.lstCameras[1].SetPhoto();
-                Program.lstCameras[1].AccionTerminada.WaitOne();
+                CameraMgr.SetPhoto(CameraIndex.Cam2);
+                CameraMgr.TakeSnapshot(CameraIndex.Cam2);
             }
-
-            if (rB_2.Checked)
-            {
-                Program.lstCameras[0].TakeSnapshot();
-                Program.lstCameras[0].AccionTerminada.WaitOne();
-                Program.lstCameras[1].TakeSnapshot();
-                Program.lstCameras[1].AccionTerminada.WaitOne();
-            }
-            else if (rb_A.Checked)
-            {
-                Program.lstCameras[0].TakeSnapshot();
-                Program.lstCameras[0].AccionTerminada.WaitOne();
-            }
-            else if (rB_B.Checked)
-            {
-                Program.lstCameras[1].TakeSnapshot();
-                Program.lstCameras[1].AccionTerminada.WaitOne();
-            }
-
-
 
             pict_Photo.Enabled = true;
         }
