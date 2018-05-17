@@ -14,7 +14,7 @@ using SharpAvi.Output;
 // Contains types related to encoding like Mpeg4VideoEncoderVcm
 using SharpAvi.Codecs;
 
-namespace Sistema_Nuria
+namespace ProRunners
 {
     public partial class GrabarForm : Form
     {

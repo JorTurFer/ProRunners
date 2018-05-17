@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Sistema_Nuria
+namespace ProRunners
 {
     public partial class SeleccionarPaciente : Form
     {

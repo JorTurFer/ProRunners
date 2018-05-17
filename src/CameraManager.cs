@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using System.Linq;
 using System.Threading;
 
-namespace Sistema_Nuria
+namespace ProRunners
 {
   class Camera : IDisposable
   {

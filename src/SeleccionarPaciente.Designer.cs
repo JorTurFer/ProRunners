@@ -1,4 +1,4 @@
-﻿namespace Sistema_Nuria
+﻿namespace ProRunners
 {
     partial class SeleccionarPaciente
     {

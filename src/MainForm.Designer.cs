@@ -1,4 +1,4 @@
-﻿namespace Sistema_Nuria
+﻿namespace ProRunners
 {
     partial class MainForm
     {
@@ -78,7 +78,7 @@
             // 
             // menuStrip1
             // 
-            this.menuStrip1.BackgroundImage = global::Sistema_Nuria.Properties.Resources.video;
+            this.menuStrip1.BackgroundImage = global::ProRunners.Properties.Resources.video;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.archivoToolStripMenuItem,
             this.pacienteToolStripMenuItem,
@@ -131,7 +131,7 @@
             // 
             // grabarVideoToolStripMenuItem
             // 
-            this.grabarVideoToolStripMenuItem.BackgroundImage = global::Sistema_Nuria.Properties.Resources.video;
+            this.grabarVideoToolStripMenuItem.BackgroundImage = global::ProRunners.Properties.Resources.video;
             this.grabarVideoToolStripMenuItem.Name = "grabarVideoToolStripMenuItem";
             this.grabarVideoToolStripMenuItem.Size = new System.Drawing.Size(87, 20);
             this.grabarVideoToolStripMenuItem.Text = "Grabar Video";

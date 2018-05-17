@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace Sistema_Nuria
+namespace ProRunners
 {
     public static class Directorios
     {
