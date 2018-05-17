@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Logo.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\Logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SharpAvi, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -143,7 +143,7 @@
     <None Include="Resources\salir.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Logo.ico" />
+    <Content Include="Resources\Logo.ico" />
     <None Include="Resources\rec.png" />
     <None Include="Resources\stop.png" />
     <None Include="Resources\photo.png" />

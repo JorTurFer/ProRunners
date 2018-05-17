@@ -101,7 +101,7 @@ namespace Sistema_Nuria
                 m_lTotalFrames[1]++;
                 pict_Cam1.BeginInvoke(new MethodInvoker(() => { pict_Cam1.Image = e.frame; }));
             }
-            catch (Exception ex)
+            catch 
             {
 
             }
@@ -116,7 +116,7 @@ namespace Sistema_Nuria
                 m_lTotalFrames[0]++;
                 pict_Cam0.BeginInvoke(new MethodInvoker(() => { pict_Cam0.Image = e.frame; }));
             }
-            catch (Exception ex)
+            catch 
             {
 
             }
@@ -356,7 +356,7 @@ namespace Sistema_Nuria
                 {
                     frameData = m_lstImages[nCamIndex].Dequeue();
                 }
-                catch (InvalidOperationException ex) //Salta si cola vacia
+                catch (InvalidOperationException) //Salta si cola vacia
                 {
                     Thread.Sleep(1000);
                     continue;
