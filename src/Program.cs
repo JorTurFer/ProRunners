@@ -6,27 +6,26 @@ using System.Windows.Forms;
 
 namespace Sistema_Nuria
 {
-    static class Program
+  static class Program
+  {
+    public static List<Camera> lstCameras = new List<Camera>();
+
+    /// <summary>
+    /// Punto de entrada principal para la aplicación.
+    /// </summary>
+    [STAThread]
+    static void Main()
     {
-        public static List<CameraManager> lstCameras = new List<CameraManager>();
+      Application.EnableVisualStyles();
+      Application.SetCompatibleTextRenderingDefault(false);
 
-        /// <summary>
-        /// Punto de entrada principal para la aplicación.
-        /// </summary>
-        [STAThread]
-        static void Main()
-        {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+      //Inicio las camaras aqui porque tardan en cargar
+      lstCameras.Add(new Camera(1));
+      lstCameras.Add(new Camera(2));
 
-            bool x64 = Environment.Is64BitProcess;
-
-            lstCameras.Add(new CameraManager(1));
-            lstCameras.Add(new CameraManager(2));
-
-            Application.Run(new MainForm());
-        }
-
-
+      Application.Run(new MainForm());
     }
+
+
+  }
 }

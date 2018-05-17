@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace Sistema_Nuria
 {
-  class CameraManager : IDisposable
+  class Camera : IDisposable
   {
     #region IDisposable Support
     private bool disposedValue = false; // Para detectar llamadas redundantes
@@ -73,7 +73,7 @@ namespace Sistema_Nuria
       FrameReviced?.Invoke(e);
     }
 
-    public CameraManager(int DevideID)
+    public Camera(int DevideID)
     {
       Ready = false;
       AccionTerminada = new AutoResetEvent(false);
