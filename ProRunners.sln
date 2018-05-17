@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sistema Nuria", "Sistema Nuria\Sistema Nuria.csproj", "{5579C0A9-AEA6-4D80-9630-0ADDB279684C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProRunners", "src\ProRunners.csproj", "{5579C0A9-AEA6-4D80-9630-0ADDB279684C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
