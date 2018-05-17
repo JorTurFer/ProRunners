@@ -83,9 +83,13 @@ namespace ProRunners
       AccionTerminada = new AutoResetEvent(false);
 
       //Si no he obtenido la lista de camaras, la obtengo
-      if (m_cameraList == null)
+      if (m_cameraList == null || m_cameraList.Length == 0)
         uEye.Info.Camera.GetCameraList(out m_cameraList);
-
+      
+      if(m_cameraList.Length == 0)
+      {
+        MessageBox.Show("No se han encontrado camaras...");
+      }
       m_Camera = new uEye.Camera();
       m_DeviceID = (int)m_cameraList.Where(x => x.CameraID == (int)DevideID).FirstOrDefault().DeviceID;
       EnqueueAction(Acciones.Init);
