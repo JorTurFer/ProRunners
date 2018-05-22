@@ -71,9 +71,7 @@ namespace ProRunners
 
             pb_HDD.Maximum = Convert.ToInt32(m_currentDrive.TotalSize / 1024);
             pb_HDD.Value = Convert.ToInt32(m_currentDrive.TotalFreeSpace / 1024);
-
-
-
+      
             m_Paciente = pac;
             for (int i = 0; i < m_lstImages.Length; i++)
                 m_lstImages[i] = new Queue<byte[]>();
@@ -194,7 +192,6 @@ namespace ProRunners
                     m_threadAvi[0].Name = $"threadImageToAvi {0}";
                     m_threadAvi[0].Start();
 
-
                     CameraMgr.StartGrab(CameraIndex.Cam1, Almacenamiento.GetDayFolder(m_Paciente));
                 }
                 else if (rB_B.Checked)
@@ -207,7 +204,6 @@ namespace ProRunners
                     m_threadAvi[1].Start();
 
                   CameraMgr.StartGrab(CameraIndex.Cam2, Almacenamiento.GetDayFolder(m_Paciente));
-
                 }
                 m_DateStartGrab = DateTime.Now;
                 m_bGrabing = true;
@@ -296,8 +292,7 @@ namespace ProRunners
             var stream = writer.AddEncodingVideoStream(encoder, width: m_nWidht, height: m_nHeight);
             stream.Width = m_nWidht;
             stream.Height = m_nHeight;
-
-
+      
             while (m_lstImages[nCamIndex].Count > 0 || m_bGrabing)
             {
                 byte[] frameData = new byte[0];
@@ -336,7 +331,6 @@ namespace ProRunners
             {
                 SetProgressState(currentProgress, 1);
                 currentProgress.Tag = 1;
-
             }
             return lfPercentage;
         }
