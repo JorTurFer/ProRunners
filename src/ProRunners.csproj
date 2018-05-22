@@ -35,9 +35,6 @@
     <ApplicationIcon>Resources\Logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SharpAvi, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpAvi.2.1.0\lib\net45\SharpAvi.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
@@ -122,7 +119,6 @@
     <EmbeddedResource Include="TomasForm.resx">
       <DependentUpon>TomasForm.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -149,6 +145,12 @@
     <None Include="Resources\rec.png" />
     <None Include="Resources\stop.png" />
     <None Include="Resources\photo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharpAvi\SharpAvi\SharpAvi.csproj">
+      <Project>{07b83677-e9b8-4166-a383-cf3b3d393fbd}</Project>
+      <Name>SharpAvi</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

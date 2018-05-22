@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27130.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProRunners", "src\ProRunners.csproj", "{5579C0A9-AEA6-4D80-9630-0ADDB279684C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAvi", "SharpAvi\SharpAvi\SharpAvi.csproj", "{07B83677-E9B8-4166-A383-CF3B3D393FBD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{5579C0A9-AEA6-4D80-9630-0ADDB279684C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5579C0A9-AEA6-4D80-9630-0ADDB279684C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5579C0A9-AEA6-4D80-9630-0ADDB279684C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07B83677-E9B8-4166-A383-CF3B3D393FBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07B83677-E9B8-4166-A383-CF3B3D393FBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07B83677-E9B8-4166-A383-CF3B3D393FBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07B83677-E9B8-4166-A383-CF3B3D393FBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
