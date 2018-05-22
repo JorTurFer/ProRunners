@@ -6,6 +6,8 @@ Image Adquisition System with IDS cameras
 |------|--------|
 |[![Build status](https://ci.appveyor.com/api/projects/status/lcfidx7lwg8k73nh/branch/master?svg=true)](https://ci.appveyor.com/project/kabestrus/prorunners/branch/master)|[![Build status](https://ci.appveyor.com/api/projects/status/lcfidx7lwg8k73nh/branch/develop?svg=true)](https://ci.appveyor.com/project/kabestrus/prorunners/branch/develop)|
 
-
-
+## Code Quality
+|master|develop|
+|------|--------|
+|[![CodeFactor](https://www.codefactor.io/repository/github/jorturfer/prorunners/badge/master)](https://www.codefactor.io/repository/github/jorturfer/prorunners/overview/master)|[![CodeFactor](https://www.codefactor.io/repository/github/jorturfer/prorunners/badge/develop)](https://www.codefactor.io/repository/github/jorturfer/prorunners/overview/develop)|
 
