@@ -23,14 +23,12 @@ namespace ProRunners
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool GetPhysicallyInstalledSystemMemory(out long TotalMemoryInKilobytes);
 
-
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
         static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr w, IntPtr l);
         public void SetProgressState(ProgressBar pBar, int state)
         {
             SendMessage(pBar.Handle, 1040, (IntPtr)state, IntPtr.Zero);
         }
-
 
         private PerformanceCounter ramCounter;
 
@@ -148,7 +146,6 @@ namespace ProRunners
         {
             rB_2.Enabled = rb_A.Enabled = rB_B.Enabled = bEnabled;
         }
-
 
         private void pict_Grab_Click(object sender, EventArgs e)
         {
@@ -286,7 +283,6 @@ namespace ProRunners
             pict_Photo.Enabled = true;
         }
 
-
         private void threadImageToAvi()
         {
             int nCamIndex = m_nThread++;
@@ -355,7 +351,6 @@ namespace ProRunners
             }
             return lfPercentage;
         }
-
 
         private void MemoryTimer_Tick(object sender, EventArgs e)
         {

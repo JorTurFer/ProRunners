@@ -28,7 +28,6 @@ namespace ProRunners
             txtFiltro.AutoCompleteSource = AutoCompleteSource.CustomSource;
         }
 
-
         private void LoadTreeView(string strPaciente = "")
         {
 

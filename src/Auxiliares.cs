@@ -55,7 +55,6 @@ namespace ProRunners
             }
             return ret;
         }
-
       
         public static byte[] BitmapToByteArray(this Bitmap bitmap, out int Width, out int Height)
         {

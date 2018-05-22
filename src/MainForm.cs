@@ -37,7 +37,6 @@ namespace ProRunners
             label1.Text = sb.ToString();
         }
 
-
         private void registrarToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (AgregarPaciente agForm = new AgregarPaciente())

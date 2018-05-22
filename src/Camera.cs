@@ -284,6 +284,5 @@ namespace ProRunners
     }
 
     public bool Ready { get; set; }
-
   }
 }

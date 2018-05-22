@@ -24,7 +24,5 @@ namespace ProRunners
 
       Application.Run(new MainForm());
     }
-
-
   }
 }

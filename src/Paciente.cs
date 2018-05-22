@@ -8,7 +8,6 @@ namespace ProRunners
 {
     public class Paciente
     {
-
         public string Nombre { get; set; }
         public DateTime Nacimiento { get; set; }
         public int Edad
@@ -20,7 +19,6 @@ namespace ProRunners
         }
         public List<DateTime> SesionesVideo { get; set; }
         public List<DateTime> SesionesFoto { get; set; }
-        public string FullPath { get; set; }       
-
+        public string FullPath { get; set; }     
     }
 }

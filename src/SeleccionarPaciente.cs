@@ -15,7 +15,6 @@ namespace ProRunners
         List<Paciente> m_lstPacientes;
         Paciente m_paciente;
 
-
         public SeleccionarPaciente()
         {
             InitializeComponent();
@@ -58,7 +57,6 @@ namespace ProRunners
             }
             dataGridView1.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
         }
-
 
         public Paciente GetPaciente()
         {
