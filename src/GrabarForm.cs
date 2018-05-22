@@ -79,7 +79,6 @@ namespace ProRunners
                 m_lstImages[i] = new Queue<byte[]>();
             for (int i = 0; i < m_eventStartCompress.Length; i++)
                 m_eventStartCompress[i] = new AutoResetEvent(false);
-
         }
 
         private void GrabarForm_Load(object sender, EventArgs e)
@@ -99,7 +98,6 @@ namespace ProRunners
             }
             catch 
             {
-
             }
         }
 
@@ -114,7 +112,6 @@ namespace ProRunners
             }
             catch 
             {
-
             }
         }
 
@@ -232,24 +229,20 @@ namespace ProRunners
                 }
                 catch
                 {
-
                 }
                 for (int i = 0; i < N_CAMERAS; i++)
                 {
                     if (!m_bCompressing[i] && m_threadAvi[i] != null)
                         m_eventStartCompress[i].Set();
-
                 }
                 for (int i = 0; i < N_CAMERAS; i++)
                 {
                     if (m_threadAvi[i] != null)
                         m_threadAvi[i].Join();
                     m_threadAvi[i] = null;
-
                 }
                 //BitmapToAvi();
             }
-
         }
 
         private void pict_Photo_Click(object sender, EventArgs e)
@@ -321,18 +314,14 @@ namespace ProRunners
                               frameData, // array with frame data
                               0, // starting index in the array
                               frameData.Length); // length of the data
-
             }
             writer.Close();
-
-
         }
 
         double CustomiceProgressBar(ProgressBar currentProgress)
         {
             double lfPercentage = Math.Round((((double)(currentProgress.Value - currentProgress.Minimum) / (double)(currentProgress.Maximum - currentProgress.Minimum)) * 100), 2);
-
-
+      
             if (lfPercentage < 10 && Convert.ToInt32(currentProgress.Tag) != 2)
             {
                 SetProgressState(currentProgress, 2);
@@ -373,7 +362,6 @@ namespace ProRunners
                         m_DateEndGrab = DateTime.Now;
                         m_eventStartCompress[i].Set();
                     }
-
             }
         }
     }
