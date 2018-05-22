@@ -20,3 +20,9 @@ build:
   project: ProRunners.sln
   parallel: true
   verbosity: minimal
+  
+only_commits:
+  files:
+    - appveyor.yml
+    - src/
+    - SharpAvi/
