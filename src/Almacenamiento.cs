@@ -8,7 +8,6 @@ namespace ProRunners
 {
     static class Almacenamiento
     {
-
         static Almacenamiento()
         {
             m_lstPacientes = GetRecordedPacientes();
@@ -110,6 +109,5 @@ namespace ProRunners
             }
             return registrar;
         }
-
     }
 }

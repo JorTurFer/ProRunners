@@ -28,7 +28,6 @@ namespace ProRunners
             }
 
             return sb.ToString().TrimEnd();
-
         }
 
         public static bool Contains(this string source, string toCheck, StringComparison comp)

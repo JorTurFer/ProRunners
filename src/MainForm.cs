@@ -69,11 +69,6 @@ namespace ProRunners
             this.Close();
         }
 
-        private void hacerFotoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-          
-        }
-
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             CameraMgr.CloseCameras();            
