@@ -25,8 +25,6 @@ namespace ProRunners
       }
     }
 
-
-
     // Este código se agrega para implementar correctamente el patrón descartable.
     public void Dispose()
     {
@@ -109,12 +107,10 @@ namespace ProRunners
 
       while (bSeguir)
       {
-
         int nEvent = WaitHandle.WaitAny(waitevents, 500);
 
         if (nEvent == 0)
         {
-
           if (m_queueAcciones.Count == 0)
             continue;
           Acciones acc = m_queueAcciones.Dequeue();
@@ -199,13 +195,11 @@ namespace ProRunners
       uEye.ColorConverter conv = new uEye.ColorConverter(m_Camera);
       conv.Set(uEye.Defines.ColorMode.BGR8Packed, uEye.Defines.ColorConvertMode.Jpeg);
 
-
       SetImageFormat(ImageFormat.Foto);
       // set event
       m_Camera.EventFrame += onFrameEvent;
 
       Ready = true;
-
 
       return statusRet;
     }

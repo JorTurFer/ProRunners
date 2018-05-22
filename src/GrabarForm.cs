@@ -18,7 +18,6 @@ namespace ProRunners
 {
     public partial class GrabarForm : Form
     {
-
         [DllImport("kernel32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool GetPhysicallyInstalledSystemMemory(out long TotalMemoryInKilobytes);
@@ -144,10 +143,8 @@ namespace ProRunners
 
         private void pict_Grab_Click(object sender, EventArgs e)
         {
-
             if (!m_bGrabing)
             {
-
                 pict_Cam0.Image = new Bitmap(2000, 2500);
                 pict_Cam1.Image = new Bitmap(2000, 2500);
 
@@ -185,7 +182,6 @@ namespace ProRunners
                 }
                 else if (rb_A.Checked)
                 {
-
                     m_lTotalFrames[0] = 0;
                     m_lTotalFrames[1] = 0;
                     m_threadAvi[0] = new Thread(threadImageToAvi);
