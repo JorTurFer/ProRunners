@@ -19,8 +19,7 @@ clone_script:
 build:
   project: ProRunners.sln
   parallel: true
-  verbosity: minimal
-  
+  verbosity: minimal  
 only_commits:
   files:
     - appveyor.yml
