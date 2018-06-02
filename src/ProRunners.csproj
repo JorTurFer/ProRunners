@@ -8,9 +8,10 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>ProRunners</RootNamespace>
     <AssemblyName>ProRunners</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -62,7 +63,8 @@
     </Compile>
     <Compile Include="Almacenamiento.cs" />
     <Compile Include="Auxiliares.cs" />
-    <Compile Include="CameraManager.cs" />
+    <Compile Include="Camera.cs" />
+    <Compile Include="CameraMgr.cs" />
     <Compile Include="Directorios.cs" />
     <Compile Include="FrameRecivedEventArgs.cs" />
     <Compile Include="GrabarForm.cs">

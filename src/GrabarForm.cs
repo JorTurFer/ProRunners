@@ -18,11 +18,11 @@ namespace ProRunners
 {
     public partial class GrabarForm : Form
     {
+        const int N_CAMERAS = 2;
 
         [DllImport("kernel32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool GetPhysicallyInstalledSystemMemory(out long TotalMemoryInKilobytes);
-
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
         static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr w, IntPtr l);
@@ -31,19 +31,20 @@ namespace ProRunners
             SendMessage(pBar.Handle, 1040, (IntPtr)state, IntPtr.Zero);
         }
 
-
         private PerformanceCounter ramCounter;
 
-        const int N_CAMERAS = 2;
         DriveInfo m_currentDrive = null;
 
         Paciente m_Paciente;
+
+        //Datos imagenes
         bool m_bGrabing = false;
         bool[] m_bSaveImage = new bool[2];
         Queue<byte[]>[] m_lstImages = new Queue<byte[]>[N_CAMERAS];
         int m_nWidht;
         int m_nHeight;
-
+        
+        //Generacion de video
         AutoResetEvent[] m_eventStartCompress = new AutoResetEvent[N_CAMERAS];
         bool[] m_bCompressing = new bool[N_CAMERAS];
         Thread[] m_threadAvi = new Thread[N_CAMERAS];
@@ -73,23 +74,18 @@ namespace ProRunners
 
             pb_HDD.Maximum = Convert.ToInt32(m_currentDrive.TotalSize / 1024);
             pb_HDD.Value = Convert.ToInt32(m_currentDrive.TotalFreeSpace / 1024);
-
-
-
+      
             m_Paciente = pac;
             for (int i = 0; i < m_lstImages.Length; i++)
                 m_lstImages[i] = new Queue<byte[]>();
             for (int i = 0; i < m_eventStartCompress.Length; i++)
                 m_eventStartCompress[i] = new AutoResetEvent(false);
-
         }
 
         private void GrabarForm_Load(object sender, EventArgs e)
         {
-
-            Program.lstCameras[0].FrameReviced += Cam0_FrameReviced;
-            Program.lstCameras[1].FrameReviced += Cam1_FrameReviced;
-
+            CameraMgr.GetCamera(CameraIndex.Cam1).FrameReviced += Cam0_FrameReviced;
+            CameraMgr.GetCamera(CameraIndex.Cam2).FrameReviced += Cam1_FrameReviced;
         }
 
         private void Cam1_FrameReviced(FrameRecivedEventArgs e)
@@ -103,7 +99,6 @@ namespace ProRunners
             }
             catch 
             {
-
             }
         }
 
@@ -118,18 +113,14 @@ namespace ProRunners
             }
             catch 
             {
-
             }
         }
 
         private void GrabarForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Program.lstCameras[0].StopGrab();
-            Program.lstCameras[1].StopGrab();
-            Program.lstCameras[0].FrameReviced -= Cam0_FrameReviced;
-            Program.lstCameras[1].FrameReviced -= Cam1_FrameReviced;
-
-
+            CameraMgr.StopGrab();
+            CameraMgr.GetCamera(CameraIndex.Cam1).FrameReviced -= Cam0_FrameReviced;
+            CameraMgr.GetCamera(CameraIndex.Cam2).FrameReviced -= Cam1_FrameReviced;
         }
 
         private void SaveImage(Bitmap bmp, int camIndex)
@@ -154,15 +145,14 @@ namespace ProRunners
             rB_2.Enabled = rb_A.Enabled = rB_B.Enabled = bEnabled;
         }
 
-
         private void pict_Grab_Click(object sender, EventArgs e)
         {
-
             if (!m_bGrabing)
             {
-
                 pict_Cam0.Image = new Bitmap(2000, 2500);
                 pict_Cam1.Image = new Bitmap(2000, 2500);
+                pict_Cam0.Visible = true;
+                pict_Cam1.Visible = true;
 
                 m_nThread = 0;
                 lbl_Time.Text = "00:00";
@@ -174,20 +164,15 @@ namespace ProRunners
                 //Coloco en modo video
                 if (rB_2.Checked)
                 {
-                    Program.lstCameras[0].SetVideo();
-                    Program.lstCameras[0].AccionTerminada.WaitOne();
-                    Program.lstCameras[1].SetVideo();
-                    Program.lstCameras[1].AccionTerminada.WaitOne();
+                    CameraMgr.SetVideo(CameraIndex.All);
                 }
                 else if (rb_A.Checked)
                 {
-                    Program.lstCameras[0].SetVideo();
-                    Program.lstCameras[0].AccionTerminada.WaitOne();
+                    CameraMgr.SetVideo(CameraIndex.Cam1);
                 }
                 else if (rB_B.Checked)
                 {
-                    Program.lstCameras[1].SetVideo();
-                    Program.lstCameras[1].AccionTerminada.WaitOne();
+                    CameraMgr.SetVideo(CameraIndex.Cam2);
                 }
 
                 if (rB_2.Checked)
@@ -199,24 +184,17 @@ namespace ProRunners
                         m_threadAvi[i].Name = $"threadImageToAvi {i}";
                         m_threadAvi[i].Start();
                     }
-
-                    Program.lstCameras[0].StartGrab(Almacenamiento.GetDayFolder(m_Paciente));
-                    Program.lstCameras[0].AccionTerminada.WaitOne();
-                    Program.lstCameras[1].StartGrab(Almacenamiento.GetDayFolder(m_Paciente));
-                    Program.lstCameras[1].AccionTerminada.WaitOne();
+                    CameraMgr.StartGrab(CameraIndex.All,Almacenamiento.GetDayFolder(m_Paciente));                    
                 }
                 else if (rb_A.Checked)
                 {
-
                     m_lTotalFrames[0] = 0;
                     m_lTotalFrames[1] = 0;
                     m_threadAvi[0] = new Thread(threadImageToAvi);
                     m_threadAvi[0].Name = $"threadImageToAvi {0}";
                     m_threadAvi[0].Start();
 
-
-                    Program.lstCameras[0].StartGrab(Almacenamiento.GetDayFolder(m_Paciente));
-                    Program.lstCameras[0].AccionTerminada.WaitOne();
+                    CameraMgr.StartGrab(CameraIndex.Cam1, Almacenamiento.GetDayFolder(m_Paciente));
                 }
                 else if (rB_B.Checked)
                 {
@@ -227,23 +205,21 @@ namespace ProRunners
                     m_threadAvi[1].Name = $"threadImageToAvi {1}";
                     m_threadAvi[1].Start();
 
-                    Program.lstCameras[1].StartGrab(Almacenamiento.GetDayFolder(m_Paciente));
-                    Program.lstCameras[1].AccionTerminada.WaitOne();
+                  CameraMgr.StartGrab(CameraIndex.Cam2, Almacenamiento.GetDayFolder(m_Paciente));
                 }
                 m_DateStartGrab = DateTime.Now;
                 m_bGrabing = true;
             }
             else
             {
+                pict_Cam0.Visible = false;
+                pict_Cam1.Visible = false;
                 m_bGrabing = false;
                 m_DateEndGrab = DateTime.Now;
                 lbl_Counters.Visible = lbl_Images.Visible = lbl_FPS.Visible = lbl_FPS_Display.Visible = lbl_Duracion.Visible = lbl_Time.Visible = false;
                 pict_Grab.Image = Properties.Resources.rec;
                 SetRadioButtonsState(true);
-                Program.lstCameras[0].StopGrab();
-                Program.lstCameras[0].AccionTerminada.WaitOne();
-                Program.lstCameras[1].StopGrab();
-                Program.lstCameras[1].AccionTerminada.WaitOne();
+                CameraMgr.StopGrab();
 
                 //new Thread(BitmapToAvi).Start();
                 try
@@ -253,24 +229,20 @@ namespace ProRunners
                 }
                 catch
                 {
-
                 }
                 for (int i = 0; i < N_CAMERAS; i++)
                 {
                     if (!m_bCompressing[i] && m_threadAvi[i] != null)
                         m_eventStartCompress[i].Set();
-
                 }
                 for (int i = 0; i < N_CAMERAS; i++)
                 {
                     if (m_threadAvi[i] != null)
                         m_threadAvi[i].Join();
                     m_threadAvi[i] = null;
-
                 }
                 //BitmapToAvi();
             }
-
         }
 
         private void pict_Photo_Click(object sender, EventArgs e)
@@ -281,51 +253,30 @@ namespace ProRunners
             pict_Cam0.SizeMode = PictureBoxSizeMode.StretchImage;
             pict_Cam0.Image = new Bitmap(2000, 2500);
             pict_Cam1.Image = new Bitmap(2000, 2500);
+            pict_Cam0.Visible = true;
+            pict_Cam1.Visible = true;
             pict_Photo.Enabled = false;
             m_bSaveImage[0] = true;
             m_bSaveImage[1] = true;
 
             if (rB_2.Checked)
             {
-                Program.lstCameras[0].SetPhoto();
-                Program.lstCameras[0].AccionTerminada.WaitOne();
-                Program.lstCameras[1].SetPhoto();
-                Program.lstCameras[1].AccionTerminada.WaitOne();
+                CameraMgr.SetPhoto(CameraIndex.All);
+                CameraMgr.TakeSnapshot(CameraIndex.All);
             }
             else if (rb_A.Checked)
             {
-                Program.lstCameras[0].SetPhoto();
-                Program.lstCameras[0].AccionTerminada.WaitOne();
+                CameraMgr.SetPhoto(CameraIndex.Cam1);
+                CameraMgr.TakeSnapshot(CameraIndex.Cam1);
             }
             else if (rB_B.Checked)
             {
-                Program.lstCameras[1].SetPhoto();
-                Program.lstCameras[1].AccionTerminada.WaitOne();
+                CameraMgr.SetPhoto(CameraIndex.Cam2);
+                CameraMgr.TakeSnapshot(CameraIndex.Cam2);
             }
-
-            if (rB_2.Checked)
-            {
-                Program.lstCameras[0].TakeSnapshot();
-                Program.lstCameras[0].AccionTerminada.WaitOne();
-                Program.lstCameras[1].TakeSnapshot();
-                Program.lstCameras[1].AccionTerminada.WaitOne();
-            }
-            else if (rb_A.Checked)
-            {
-                Program.lstCameras[0].TakeSnapshot();
-                Program.lstCameras[0].AccionTerminada.WaitOne();
-            }
-            else if (rB_B.Checked)
-            {
-                Program.lstCameras[1].TakeSnapshot();
-                Program.lstCameras[1].AccionTerminada.WaitOne();
-            }
-
-
 
             pict_Photo.Enabled = true;
         }
-
 
         private void threadImageToAvi()
         {
@@ -347,8 +298,7 @@ namespace ProRunners
             var stream = writer.AddEncodingVideoStream(encoder, width: m_nWidht, height: m_nHeight);
             stream.Width = m_nWidht;
             stream.Height = m_nHeight;
-
-
+      
             while (m_lstImages[nCamIndex].Count > 0 || m_bGrabing)
             {
                 byte[] frameData = new byte[0];
@@ -365,18 +315,14 @@ namespace ProRunners
                               frameData, // array with frame data
                               0, // starting index in the array
                               frameData.Length); // length of the data
-
             }
             writer.Close();
-
-
         }
 
         double CustomiceProgressBar(ProgressBar currentProgress)
         {
             double lfPercentage = Math.Round((((double)(currentProgress.Value - currentProgress.Minimum) / (double)(currentProgress.Maximum - currentProgress.Minimum)) * 100), 2);
-
-
+      
             if (lfPercentage < 10 && Convert.ToInt32(currentProgress.Tag) != 2)
             {
                 SetProgressState(currentProgress, 2);
@@ -391,11 +337,9 @@ namespace ProRunners
             {
                 SetProgressState(currentProgress, 1);
                 currentProgress.Tag = 1;
-
             }
             return lfPercentage;
         }
-
 
         private void MemoryTimer_Tick(object sender, EventArgs e)
         {
@@ -418,7 +362,6 @@ namespace ProRunners
                         m_DateEndGrab = DateTime.Now;
                         m_eventStartCompress[i].Set();
                     }
-
             }
         }
     }

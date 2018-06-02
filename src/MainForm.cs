@@ -37,7 +37,6 @@ namespace ProRunners
             label1.Text = sb.ToString();
         }
 
-
         private void registrarToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (AgregarPaciente agForm = new AgregarPaciente())
@@ -49,7 +48,7 @@ namespace ProRunners
 
         private void grabarVideoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!Program.lstCameras[0].Ready || !Program.lstCameras[1].Ready)
+            if (!CameraMgr.IsReady)
             {
                 MessageBox.Show("Las camaras se estan conectando, espera un momento");
                 return;
@@ -70,18 +69,9 @@ namespace ProRunners
             this.Close();
         }
 
-        private void hacerFotoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-          
-        }
-
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            foreach(var camera in Program.lstCameras)
-            {
-                camera.Dispose();
-            }
-            
+            CameraMgr.CloseCameras();            
         }
 
         private void visualizarToolStripMenuItem_Click(object sender, EventArgs e)

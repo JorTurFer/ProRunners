@@ -9,6 +9,13 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace ProRunners
 {
+    enum CameraIndex
+    {
+      All,
+      Cam1,
+      Cam2
+    }
+    
     static class Auxiliares
     {
         public static string RebuildName(string strInput)
@@ -21,7 +28,6 @@ namespace ProRunners
             }
 
             return sb.ToString().TrimEnd();
-
         }
 
         public static bool Contains(this string source, string toCheck, StringComparison comp)
@@ -48,7 +54,6 @@ namespace ProRunners
             }
             return ret;
         }
-
       
         public static byte[] BitmapToByteArray(this Bitmap bitmap, out int Width, out int Height)
         {

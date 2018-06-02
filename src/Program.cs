@@ -8,8 +8,6 @@ namespace ProRunners
 {
   static class Program
   {
-    public static List<Camera> lstCameras = new List<Camera>();
-
     /// <summary>
     /// Punto de entrada principal para la aplicación.
     /// </summary>
@@ -20,12 +18,10 @@ namespace ProRunners
       Application.SetCompatibleTextRenderingDefault(false);
 
       //Inicio las camaras aqui porque tardan en cargar
-      lstCameras.Add(new Camera(1));
-      lstCameras.Add(new Camera(2));
+      CameraMgr.AddCamera(new Camera(CameraIndex.Cam1));
+      CameraMgr.AddCamera(new Camera(CameraIndex.Cam2));
 
       Application.Run(new MainForm());
     }
-
-
   }
 }

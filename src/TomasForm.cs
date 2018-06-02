@@ -28,10 +28,8 @@ namespace ProRunners
             txtFiltro.AutoCompleteSource = AutoCompleteSource.CustomSource;
         }
 
-
         private void LoadTreeView(string strPaciente = "")
         {
-
             TreeNode nodeRoot = new TreeNode("Pacientes");
             nodeRoot.Tag = "Root";
 

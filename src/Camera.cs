@@ -25,8 +25,6 @@ namespace ProRunners
       }
     }
 
-
-
     // Este código se agrega para implementar correctamente el patrón descartable.
     public void Dispose()
     {
@@ -50,6 +48,9 @@ namespace ProRunners
     public AutoResetEvent AccionTerminada { get; set; }
     uEye.Camera m_Camera;
 
+    static uEye.Types.CameraInformation[] m_cameraList;
+
+    public CameraIndex ID { get; private set; }
     int m_DeviceID;
     int m_FrameCount;
     int m_nMemoryID = -1;
@@ -73,15 +74,22 @@ namespace ProRunners
       FrameReviced?.Invoke(e);
     }
 
-    public Camera(int DevideID)
+    public Camera(CameraIndex DevideID)
     {
+      ID = DevideID;
       Ready = false;
       AccionTerminada = new AutoResetEvent(false);
-      uEye.Types.CameraInformation[] cameraList;
-      uEye.Info.Camera.GetCameraList(out cameraList);
 
+      //Si no he obtenido la lista de camaras, la obtengo
+      if (m_cameraList == null || m_cameraList.Length == 0)
+        uEye.Info.Camera.GetCameraList(out m_cameraList);
+      
+      if(m_cameraList.Length == 0)
+      {
+        MessageBox.Show("No se han encontrado camaras...");
+      }
       m_Camera = new uEye.Camera();
-      m_DeviceID = (int)cameraList.Where(x => x.CameraID == DevideID).FirstOrDefault().DeviceID;
+      m_DeviceID = (int)m_cameraList.Where(x => x.CameraID == (int)DevideID).FirstOrDefault().DeviceID;
       EnqueueAction(Acciones.Init);
       m_threadCiclo = new Thread(Cycle);
       m_threadCiclo.IsBackground = true;
@@ -99,12 +107,10 @@ namespace ProRunners
 
       while (bSeguir)
       {
-
         int nEvent = WaitHandle.WaitAny(waitevents, 500);
 
         if (nEvent == 0)
         {
-
           if (m_queueAcciones.Count == 0)
             continue;
           Acciones acc = m_queueAcciones.Dequeue();
@@ -117,11 +123,9 @@ namespace ProRunners
             case Acciones.Foto:
               m_bSnapShot = true;
               var res = m_Camera.Acquisition.Capture();
-              //res = m_Camera.Image.Save($"{m_strPath}\\Fotos\\{DateTime.Now.ToString("HH.mm.ss dd_MM_yyyy")}_{m_DeviceID}.Jpeg", System.Drawing.Imaging.ImageFormat.Jpeg);
               break;
             case Acciones.StartVideo:
               var res2 = m_Camera.Acquisition.Capture();
-              //res2 = m_Camera.Video.Start($"{m_strPath}\\Videos\\{DateTime.Now.ToString("HH.mm.ss dd_MM_yyyy")}_{m_DeviceID}.avi");
               break;
             case Acciones.StopVideo:
               //var res3 = m_Camera.Video.Stop();
@@ -183,19 +187,16 @@ namespace ProRunners
         MessageBox.Show("Initializing the camera failed");
         return statusRet;
       }
-      //m_Camera.Parameter.Load(@"C:\Users\jorge\Desktop\IDS\cam0.ini");
       uEye.DeviceFeatureJpegCompression compressor = new uEye.DeviceFeatureJpegCompression(m_Camera);
       compressor.Set(100);
       uEye.ColorConverter conv = new uEye.ColorConverter(m_Camera);
       conv.Set(uEye.Defines.ColorMode.BGR8Packed, uEye.Defines.ColorConvertMode.Jpeg);
-
 
       SetImageFormat(ImageFormat.Foto);
       // set event
       m_Camera.EventFrame += onFrameEvent;
 
       Ready = true;
-
 
       return statusRet;
     }
@@ -274,6 +275,5 @@ namespace ProRunners
     }
 
     public bool Ready { get; set; }
-
   }
 }
