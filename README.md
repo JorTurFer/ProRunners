@@ -1,5 +1,5 @@
 ## ProRunners
-Image Adquisition System with IDS cameras
+Image Adquisition System with IDS USB cameras
 
 ## Build Status
 |master|develop|
