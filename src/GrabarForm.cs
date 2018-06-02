@@ -44,7 +44,7 @@ namespace ProRunners
         int m_nWidht;
         int m_nHeight;
         
-
+        //Generacion de video
         AutoResetEvent[] m_eventStartCompress = new AutoResetEvent[N_CAMERAS];
         bool[] m_bCompressing = new bool[N_CAMERAS];
         Thread[] m_threadAvi = new Thread[N_CAMERAS];
