@@ -10,3 +10,4 @@ Image Adquisition System with IDS cameras
 |master|develop|
 |------|--------|
 |[![CodeFactor](https://www.codefactor.io/repository/github/jorturfer/prorunners/badge/master)](https://www.codefactor.io/repository/github/jorturfer/prorunners/overview/master)|[![CodeFactor](https://www.codefactor.io/repository/github/jorturfer/prorunners/badge/develop)](https://www.codefactor.io/repository/github/jorturfer/prorunners/overview/develop)|
+
