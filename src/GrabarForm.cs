@@ -18,6 +18,8 @@ namespace ProRunners
 {
     public partial class GrabarForm : Form
     {
+        const int N_CAMERAS = 2;
+
         [DllImport("kernel32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool GetPhysicallyInstalledSystemMemory(out long TotalMemoryInKilobytes);
@@ -31,15 +33,17 @@ namespace ProRunners
 
         private PerformanceCounter ramCounter;
 
-        const int N_CAMERAS = 2;
         DriveInfo m_currentDrive = null;
 
         Paciente m_Paciente;
+
+        //Datos imagenes
         bool m_bGrabing = false;
         bool[] m_bSaveImage = new bool[2];
         Queue<byte[]>[] m_lstImages = new Queue<byte[]>[N_CAMERAS];
         int m_nWidht;
         int m_nHeight;
+        
 
         AutoResetEvent[] m_eventStartCompress = new AutoResetEvent[N_CAMERAS];
         bool[] m_bCompressing = new bool[N_CAMERAS];
@@ -147,6 +151,8 @@ namespace ProRunners
             {
                 pict_Cam0.Image = new Bitmap(2000, 2500);
                 pict_Cam1.Image = new Bitmap(2000, 2500);
+                pict_Cam0.Visible = true;
+                pict_Cam1.Visible = true;
 
                 m_nThread = 0;
                 lbl_Time.Text = "00:00";
@@ -206,6 +212,8 @@ namespace ProRunners
             }
             else
             {
+                pict_Cam0.Visible = false;
+                pict_Cam1.Visible = false;
                 m_bGrabing = false;
                 m_DateEndGrab = DateTime.Now;
                 lbl_Counters.Visible = lbl_Images.Visible = lbl_FPS.Visible = lbl_FPS_Display.Visible = lbl_Duracion.Visible = lbl_Time.Visible = false;
@@ -245,6 +253,8 @@ namespace ProRunners
             pict_Cam0.SizeMode = PictureBoxSizeMode.StretchImage;
             pict_Cam0.Image = new Bitmap(2000, 2500);
             pict_Cam1.Image = new Bitmap(2000, 2500);
+            pict_Cam0.Visible = true;
+            pict_Cam1.Visible = true;
             pict_Photo.Enabled = false;
             m_bSaveImage[0] = true;
             m_bSaveImage[1] = true;

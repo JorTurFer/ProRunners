@@ -78,13 +78,7 @@ namespace ProRunners
     {
       get
       {
-        bool tmp = false;
-        foreach (Camera cam in m_lstCameras)
-        {
-          if (!tmp)
-            tmp = cam.Ready;
-        }
-        return tmp;
+        return m_lstCameras.Where(x=>x.Ready).Count() == m_lstCameras.Count();
       }
     }
   }

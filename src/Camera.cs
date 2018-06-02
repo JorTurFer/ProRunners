@@ -123,11 +123,9 @@ namespace ProRunners
             case Acciones.Foto:
               m_bSnapShot = true;
               var res = m_Camera.Acquisition.Capture();
-              //res = m_Camera.Image.Save($"{m_strPath}\\Fotos\\{DateTime.Now.ToString("HH.mm.ss dd_MM_yyyy")}_{m_DeviceID}.Jpeg", System.Drawing.Imaging.ImageFormat.Jpeg);
               break;
             case Acciones.StartVideo:
               var res2 = m_Camera.Acquisition.Capture();
-              //res2 = m_Camera.Video.Start($"{m_strPath}\\Videos\\{DateTime.Now.ToString("HH.mm.ss dd_MM_yyyy")}_{m_DeviceID}.avi");
               break;
             case Acciones.StopVideo:
               //var res3 = m_Camera.Video.Stop();
@@ -189,7 +187,6 @@ namespace ProRunners
         MessageBox.Show("Initializing the camera failed");
         return statusRet;
       }
-      //m_Camera.Parameter.Load(@"C:\Users\jorge\Desktop\IDS\cam0.ini");
       uEye.DeviceFeatureJpegCompression compressor = new uEye.DeviceFeatureJpegCompression(m_Camera);
       compressor.Set(100);
       uEye.ColorConverter conv = new uEye.ColorConverter(m_Camera);
