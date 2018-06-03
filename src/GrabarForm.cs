@@ -49,7 +49,7 @@ namespace ProRunners
         bool[] m_bCompressing = new bool[N_CAMERAS];
         Thread[] m_threadAvi = new Thread[N_CAMERAS];
         long[] m_lTotalFrames = new long[N_CAMERAS];
-        static int m_nThread;
+        int m_nThread;
 
         DateTime m_DateStartGrab = DateTime.Now;
         DateTime m_DateEndGrab;
@@ -161,22 +161,11 @@ namespace ProRunners
                 lbl_Counters.Visible = lbl_Images.Visible = lbl_FPS.Visible = lbl_FPS_Display.Visible = Properties.Settings.Default.bDebug;
                 pict_Grab.Image = Properties.Resources.stop;
                 SetRadioButtonsState(false);
-                //Coloco en modo video
-                if (rB_2.Checked)
-                {
-                    CameraMgr.SetVideo(CameraIndex.All);
-                }
-                else if (rb_A.Checked)
-                {
-                    CameraMgr.SetVideo(CameraIndex.Cam1);
-                }
-                else if (rB_B.Checked)
-                {
-                    CameraMgr.SetVideo(CameraIndex.Cam2);
-                }
 
                 if (rB_2.Checked)
                 {
+
+                    CameraMgr.SetVideo(CameraIndex.All);
                     for (int i = 0; i < m_threadAvi.Length; i++)
                     {
                         m_lTotalFrames[i] = 0;
@@ -188,6 +177,7 @@ namespace ProRunners
                 }
                 else if (rb_A.Checked)
                 {
+                    CameraMgr.SetVideo(CameraIndex.Cam1);
                     m_lTotalFrames[0] = 0;
                     m_lTotalFrames[1] = 0;
                     m_threadAvi[0] = new Thread(threadImageToAvi);
@@ -198,6 +188,7 @@ namespace ProRunners
                 }
                 else if (rB_B.Checked)
                 {
+                    CameraMgr.SetVideo(CameraIndex.Cam2);
                     m_nThread = 1; //Cincelo esto para que coja que es el 1 si solo esta la camara 1
                     m_lTotalFrames[0] = 0;
                     m_lTotalFrames[1] = 0;
@@ -221,7 +212,6 @@ namespace ProRunners
                 SetRadioButtonsState(true);
                 CameraMgr.StopGrab();
 
-                //new Thread(BitmapToAvi).Start();
                 try
                 {
                     pict_Cam0.Image = new Bitmap(2000, 2000);
@@ -241,7 +231,6 @@ namespace ProRunners
                         m_threadAvi[i].Join();
                     m_threadAvi[i] = null;
                 }
-                //BitmapToAvi();
             }
         }
 

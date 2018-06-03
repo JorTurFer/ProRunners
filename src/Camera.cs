@@ -122,14 +122,13 @@ namespace ProRunners
               break;
             case Acciones.Foto:
               m_bSnapShot = true;
-              var res = m_Camera.Acquisition.Capture();
+              m_Camera.Acquisition.Capture();
               break;
             case Acciones.StartVideo:
-              var res2 = m_Camera.Acquisition.Capture();
+              m_Camera.Acquisition.Capture();
               break;
             case Acciones.StopVideo:
-              //var res3 = m_Camera.Video.Stop();
-              var res3 = m_Camera.Acquisition.Stop();
+              m_Camera.Acquisition.Stop();
               break;
             case Acciones.SetFormatPhoto:
               SetImageFormat(ImageFormat.Foto);
@@ -241,9 +240,8 @@ namespace ProRunners
           var resu = m_Camera.Memory.Free(m_nMemoryID);
         }
 
-        var res = m_Camera.Size.ImageFormat.Set((uint)formato);
-        res = m_Camera.Memory.Allocate(out m_nMemoryID, true);
-        //m_Camera.Memory.Allocate();
+        m_Camera.Size.ImageFormat.Set((uint)formato);
+        m_Camera.Memory.Allocate(out m_nMemoryID, true);
         m_lastFormat = formato;
       }
     }
