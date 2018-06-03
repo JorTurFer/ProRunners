@@ -162,7 +162,6 @@ namespace ProRunners
       if (statusRet == uEye.Defines.Status.SUCCESS)
       {
         // start capture
-        //statusRet = m_Camera.Acquisition.Freeze();
         if (statusRet != uEye.Defines.Status.SUCCESS)
         {
           MessageBox.Show("Starting live video failed");
@@ -178,9 +177,7 @@ namespace ProRunners
 
     private uEye.Defines.Status initCamera()
     {
-      uEye.Defines.Status statusRet = uEye.Defines.Status.NO_SUCCESS;
-
-      statusRet = m_Camera.Init(m_DeviceID | (Int32)uEye.Defines.DeviceEnumeration.UseDeviceID, IntPtr.Zero);
+      uEye.Defines.Status statusRet = m_Camera.Init(m_DeviceID | (Int32)uEye.Defines.DeviceEnumeration.UseDeviceID, IntPtr.Zero);
       if (statusRet != uEye.Defines.Status.SUCCESS)
       {
         MessageBox.Show("Initializing the camera failed");
@@ -237,7 +234,7 @@ namespace ProRunners
       {
         if (m_nMemoryID != -1)
         {
-          var resu = m_Camera.Memory.Free(m_nMemoryID);
+          m_Camera.Memory.Free(m_nMemoryID);
         }
 
         m_Camera.Size.ImageFormat.Set((uint)formato);
