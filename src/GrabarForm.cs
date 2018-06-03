@@ -164,7 +164,6 @@ namespace ProRunners
 
                 if (rB_2.Checked)
                 {
-
                     CameraMgr.SetVideo(CameraIndex.All);
                     for (int i = 0; i < m_threadAvi.Length; i++)
                     {
