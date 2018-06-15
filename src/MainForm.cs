@@ -48,7 +48,7 @@ namespace ProRunners
 
         private void grabarVideoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (CameraMgr.IsReady)
+            if (!CameraMgr.IsReady)
             {
                 MessageBox.Show("Las camaras se estan conectando, espera un momento");
                 return;

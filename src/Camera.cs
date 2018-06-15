@@ -122,16 +122,13 @@ namespace ProRunners
               break;
             case Acciones.Foto:
               m_bSnapShot = true;
-              var res = m_Camera.Acquisition.Capture();
-              //res = m_Camera.Image.Save($"{m_strPath}\\Fotos\\{DateTime.Now.ToString("HH.mm.ss dd_MM_yyyy")}_{m_DeviceID}.Jpeg", System.Drawing.Imaging.ImageFormat.Jpeg);
+              m_Camera.Acquisition.Capture();
               break;
             case Acciones.StartVideo:
-              var res2 = m_Camera.Acquisition.Capture();
-              //res2 = m_Camera.Video.Start($"{m_strPath}\\Videos\\{DateTime.Now.ToString("HH.mm.ss dd_MM_yyyy")}_{m_DeviceID}.avi");
+              m_Camera.Acquisition.Capture();
               break;
             case Acciones.StopVideo:
-              //var res3 = m_Camera.Video.Stop();
-              var res3 = m_Camera.Acquisition.Stop();
+              m_Camera.Acquisition.Stop();
               break;
             case Acciones.SetFormatPhoto:
               SetImageFormat(ImageFormat.Foto);
@@ -165,7 +162,6 @@ namespace ProRunners
       if (statusRet == uEye.Defines.Status.SUCCESS)
       {
         // start capture
-        //statusRet = m_Camera.Acquisition.Freeze();
         if (statusRet != uEye.Defines.Status.SUCCESS)
         {
           MessageBox.Show("Starting live video failed");
@@ -181,15 +177,12 @@ namespace ProRunners
 
     private uEye.Defines.Status initCamera()
     {
-      uEye.Defines.Status statusRet = uEye.Defines.Status.NO_SUCCESS;
-
-      statusRet = m_Camera.Init(m_DeviceID | (Int32)uEye.Defines.DeviceEnumeration.UseDeviceID, IntPtr.Zero);
+      uEye.Defines.Status statusRet = m_Camera.Init(m_DeviceID | (Int32)uEye.Defines.DeviceEnumeration.UseDeviceID, IntPtr.Zero);
       if (statusRet != uEye.Defines.Status.SUCCESS)
       {
         MessageBox.Show("Initializing the camera failed");
         return statusRet;
       }
-      //m_Camera.Parameter.Load(@"C:\Users\jorge\Desktop\IDS\cam0.ini");
       uEye.DeviceFeatureJpegCompression compressor = new uEye.DeviceFeatureJpegCompression(m_Camera);
       compressor.Set(100);
       uEye.ColorConverter conv = new uEye.ColorConverter(m_Camera);
@@ -241,12 +234,11 @@ namespace ProRunners
       {
         if (m_nMemoryID != -1)
         {
-          var resu = m_Camera.Memory.Free(m_nMemoryID);
+          m_Camera.Memory.Free(m_nMemoryID);
         }
 
-        var res = m_Camera.Size.ImageFormat.Set((uint)formato);
-        res = m_Camera.Memory.Allocate(out m_nMemoryID, true);
-        //m_Camera.Memory.Allocate();
+        m_Camera.Size.ImageFormat.Set((uint)formato);
+        m_Camera.Memory.Allocate(out m_nMemoryID, true);
         m_lastFormat = formato;
       }
     }

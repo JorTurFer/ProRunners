@@ -18,6 +18,8 @@ namespace ProRunners
 {
     public partial class GrabarForm : Form
     {
+        const int N_CAMERAS = 2;
+
         [DllImport("kernel32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool GetPhysicallyInstalledSystemMemory(out long TotalMemoryInKilobytes);
@@ -31,21 +33,23 @@ namespace ProRunners
 
         private PerformanceCounter ramCounter;
 
-        const int N_CAMERAS = 2;
         DriveInfo m_currentDrive = null;
 
         Paciente m_Paciente;
+
+        //Datos imagenes
         bool m_bGrabing = false;
         bool[] m_bSaveImage = new bool[2];
         Queue<byte[]>[] m_lstImages = new Queue<byte[]>[N_CAMERAS];
         int m_nWidht;
         int m_nHeight;
-
+        
+        //Generacion de video
         AutoResetEvent[] m_eventStartCompress = new AutoResetEvent[N_CAMERAS];
         bool[] m_bCompressing = new bool[N_CAMERAS];
         Thread[] m_threadAvi = new Thread[N_CAMERAS];
         long[] m_lTotalFrames = new long[N_CAMERAS];
-        static int m_nThread;
+        int m_nThread;
 
         DateTime m_DateStartGrab = DateTime.Now;
         DateTime m_DateEndGrab;
@@ -147,6 +151,8 @@ namespace ProRunners
             {
                 pict_Cam0.Image = new Bitmap(2000, 2500);
                 pict_Cam1.Image = new Bitmap(2000, 2500);
+                pict_Cam0.Visible = true;
+                pict_Cam1.Visible = true;
 
                 m_nThread = 0;
                 lbl_Time.Text = "00:00";
@@ -155,22 +161,10 @@ namespace ProRunners
                 lbl_Counters.Visible = lbl_Images.Visible = lbl_FPS.Visible = lbl_FPS_Display.Visible = Properties.Settings.Default.bDebug;
                 pict_Grab.Image = Properties.Resources.stop;
                 SetRadioButtonsState(false);
-                //Coloco en modo video
-                if (rB_2.Checked)
-                {
-                    CameraMgr.SetVideo(CameraIndex.All);
-                }
-                else if (rb_A.Checked)
-                {
-                    CameraMgr.SetVideo(CameraIndex.Cam1);
-                }
-                else if (rB_B.Checked)
-                {
-                    CameraMgr.SetVideo(CameraIndex.Cam2);
-                }
 
                 if (rB_2.Checked)
                 {
+                    CameraMgr.SetVideo(CameraIndex.All);
                     for (int i = 0; i < m_threadAvi.Length; i++)
                     {
                         m_lTotalFrames[i] = 0;
@@ -182,6 +176,7 @@ namespace ProRunners
                 }
                 else if (rb_A.Checked)
                 {
+                    CameraMgr.SetVideo(CameraIndex.Cam1);
                     m_lTotalFrames[0] = 0;
                     m_lTotalFrames[1] = 0;
                     m_threadAvi[0] = new Thread(threadImageToAvi);
@@ -192,6 +187,7 @@ namespace ProRunners
                 }
                 else if (rB_B.Checked)
                 {
+                    CameraMgr.SetVideo(CameraIndex.Cam2);
                     m_nThread = 1; //Cincelo esto para que coja que es el 1 si solo esta la camara 1
                     m_lTotalFrames[0] = 0;
                     m_lTotalFrames[1] = 0;
@@ -206,6 +202,8 @@ namespace ProRunners
             }
             else
             {
+                pict_Cam0.Visible = false;
+                pict_Cam1.Visible = false;
                 m_bGrabing = false;
                 m_DateEndGrab = DateTime.Now;
                 lbl_Counters.Visible = lbl_Images.Visible = lbl_FPS.Visible = lbl_FPS_Display.Visible = lbl_Duracion.Visible = lbl_Time.Visible = false;
@@ -213,7 +211,6 @@ namespace ProRunners
                 SetRadioButtonsState(true);
                 CameraMgr.StopGrab();
 
-                //new Thread(BitmapToAvi).Start();
                 try
                 {
                     pict_Cam0.Image = new Bitmap(2000, 2000);
@@ -233,7 +230,6 @@ namespace ProRunners
                         m_threadAvi[i].Join();
                     m_threadAvi[i] = null;
                 }
-                //BitmapToAvi();
             }
         }
 
@@ -245,6 +241,8 @@ namespace ProRunners
             pict_Cam0.SizeMode = PictureBoxSizeMode.StretchImage;
             pict_Cam0.Image = new Bitmap(2000, 2500);
             pict_Cam1.Image = new Bitmap(2000, 2500);
+            pict_Cam0.Visible = true;
+            pict_Cam1.Visible = true;
             pict_Photo.Enabled = false;
             m_bSaveImage[0] = true;
             m_bSaveImage[1] = true;
