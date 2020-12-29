@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.IO;
-using System.Linq;
-using System.Threading;
+﻿// Contains types related to encoding like Mpeg4VideoEncoderVcm
+using SharpAvi.Codecs;
 // Contains common types for AVI format like FourCC
-using SharpAvi;
 // Contains types used for writing like AviWriter
 using SharpAvi.Output;
-// Contains types related to encoding like Mpeg4VideoEncoderVcm
-using SharpAvi.Codecs;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace ProRunners
 {
@@ -43,7 +42,7 @@ namespace ProRunners
         Queue<byte[]>[] m_lstImages = new Queue<byte[]>[N_CAMERAS];
         int m_nWidht;
         int m_nHeight;
-        
+
         //Generacion de video
         AutoResetEvent[] m_eventStartCompress = new AutoResetEvent[N_CAMERAS];
         bool[] m_bCompressing = new bool[N_CAMERAS];
@@ -59,7 +58,7 @@ namespace ProRunners
             InitializeComponent();
 
             m_nThread = 0;
-            
+
             int nIndexPuntos = Application.StartupPath.IndexOf(':');
             string strDriveNanme = Application.StartupPath.Substring(0, nIndexPuntos);
 
@@ -74,7 +73,7 @@ namespace ProRunners
 
             pb_HDD.Maximum = Convert.ToInt32(m_currentDrive.TotalSize / 1024);
             pb_HDD.Value = Convert.ToInt32(m_currentDrive.TotalFreeSpace / 1024);
-      
+
             m_Paciente = pac;
             for (int i = 0; i < m_lstImages.Length; i++)
                 m_lstImages[i] = new Queue<byte[]>();
@@ -84,34 +83,52 @@ namespace ProRunners
 
         private void GrabarForm_Load(object sender, EventArgs e)
         {
-            CameraMgr.GetCamera(CameraIndex.Cam1).FrameReviced += Cam0_FrameReviced;
-            CameraMgr.GetCamera(CameraIndex.Cam2).FrameReviced += Cam1_FrameReviced;
+            var cam1 = CameraMgr.GetCamera(CameraIndex.Cam1);
+            var cam2 = CameraMgr.GetCamera(CameraIndex.Cam2);
+            if (!(cam1 is null)) cam1.FrameReviced += Cam1_FrameReviced;
+            else
+            {
+                rB_2.Enabled = false;
+                rB_B.Enabled = false;
+                rB_A.Enabled = false;
+                rB_B.Checked = true;
+            }
+            if (!(cam2 is null)) cam2.FrameReviced += Cam2_FrameReviced;
+            else
+            {
+                rB_2.Enabled = false;
+                rB_B.Enabled = false;
+                rB_A.Enabled = false;
+                rB_A.Checked = true;
+            }
         }
 
-        private void Cam1_FrameReviced(FrameRecivedEventArgs e)
+        private void Cam2_FrameReviced(object sender, FrameEventArgs e)
         {
             try
             {
-                SaveImage(e.frame, 1);
-                ImageToAvi(e.frame, 1);
+                if (e.Image is null) return;
+                SaveImage(e.Image, 1);
+                ImageToAvi(e.Image, 1);
                 m_lTotalFrames[1]++;
-                pict_Cam1.BeginInvoke(new MethodInvoker(() => { pict_Cam1.Image = e.frame; }));
+                pict_Cam1.BeginInvoke(new MethodInvoker(() => { pict_Cam1.Image = e.Image; }));
             }
-            catch 
+            catch
             {
             }
         }
 
-        private void Cam0_FrameReviced(FrameRecivedEventArgs e)
+        private void Cam1_FrameReviced(object sender, FrameEventArgs e)
         {
             try
             {
-                SaveImage(e.frame, 0);
-                ImageToAvi(e.frame, 0);
+                if (e.Image is null) return;
+                SaveImage(e.Image, 0);
+                ImageToAvi(e.Image, 0);
                 m_lTotalFrames[0]++;
-                pict_Cam0.BeginInvoke(new MethodInvoker(() => { pict_Cam0.Image = e.frame; }));
+                pict_Cam0.BeginInvoke(new MethodInvoker(() => { pict_Cam0.Image = e.Image; }));
             }
-            catch 
+            catch
             {
             }
         }
@@ -119,8 +136,10 @@ namespace ProRunners
         private void GrabarForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             CameraMgr.StopGrab();
-            CameraMgr.GetCamera(CameraIndex.Cam1).FrameReviced -= Cam0_FrameReviced;
-            CameraMgr.GetCamera(CameraIndex.Cam2).FrameReviced -= Cam1_FrameReviced;
+            var cam1 = CameraMgr.GetCamera(CameraIndex.Cam1);
+            var cam2 = CameraMgr.GetCamera(CameraIndex.Cam2);
+            if (!(cam1 is null)) cam1.FrameReviced -= Cam1_FrameReviced;
+            if (!(cam2 is null)) cam2.FrameReviced -= Cam2_FrameReviced;
         }
 
         private void SaveImage(Bitmap bmp, int camIndex)
@@ -142,7 +161,10 @@ namespace ProRunners
 
         void SetRadioButtonsState(bool bEnabled)
         {
-            rB_2.Enabled = rb_A.Enabled = rB_B.Enabled = bEnabled;
+            var cam1 = CameraMgr.GetCamera(CameraIndex.Cam1);
+            var cam2 = CameraMgr.GetCamera(CameraIndex.Cam2);
+            if (cam1 is null || cam2 is null) return;
+            rB_2.Enabled = rB_A.Enabled = rB_B.Enabled = bEnabled;
         }
 
         private void pict_Grab_Click(object sender, EventArgs e)
@@ -172,9 +194,9 @@ namespace ProRunners
                         m_threadAvi[i].Name = $"threadImageToAvi {i}";
                         m_threadAvi[i].Start();
                     }
-                    CameraMgr.StartGrab(CameraIndex.All,Almacenamiento.GetDayFolder(m_Paciente));                    
+                    CameraMgr.StartGrab(CameraIndex.All, Almacenamiento.GetDayFolder(m_Paciente));
                 }
-                else if (rb_A.Checked)
+                else if (rB_A.Checked)
                 {
                     CameraMgr.SetVideo(CameraIndex.Cam1);
                     m_lTotalFrames[0] = 0;
@@ -195,7 +217,7 @@ namespace ProRunners
                     m_threadAvi[1].Name = $"threadImageToAvi {1}";
                     m_threadAvi[1].Start();
 
-                  CameraMgr.StartGrab(CameraIndex.Cam2, Almacenamiento.GetDayFolder(m_Paciente));
+                    CameraMgr.StartGrab(CameraIndex.Cam2, Almacenamiento.GetDayFolder(m_Paciente));
                 }
                 m_DateStartGrab = DateTime.Now;
                 m_bGrabing = true;
@@ -252,7 +274,7 @@ namespace ProRunners
                 CameraMgr.SetPhoto(CameraIndex.All);
                 CameraMgr.TakeSnapshot(CameraIndex.All);
             }
-            else if (rb_A.Checked)
+            else if (rB_A.Checked)
             {
                 CameraMgr.SetPhoto(CameraIndex.Cam1);
                 CameraMgr.TakeSnapshot(CameraIndex.Cam1);
@@ -286,7 +308,7 @@ namespace ProRunners
             var stream = writer.AddEncodingVideoStream(encoder, width: m_nWidht, height: m_nHeight);
             stream.Width = m_nWidht;
             stream.Height = m_nHeight;
-      
+
             while (m_lstImages[nCamIndex].Count > 0 || m_bGrabing)
             {
                 byte[] frameData = new byte[0];
@@ -310,7 +332,7 @@ namespace ProRunners
         double CustomiceProgressBar(ProgressBar currentProgress)
         {
             double lfPercentage = Math.Round((((double)(currentProgress.Value - currentProgress.Minimum) / (double)(currentProgress.Maximum - currentProgress.Minimum)) * 100), 2);
-      
+
             if (lfPercentage < 10 && Convert.ToInt32(currentProgress.Tag) != 2)
             {
                 SetProgressState(currentProgress, 2);

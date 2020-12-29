@@ -1,11 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProRunners", "src\ProRunners.csproj", "{5579C0A9-AEA6-4D80-9630-0ADDB279684C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAvi", "SharpAvi\SharpAvi\SharpAvi.csproj", "{07B83677-E9B8-4166-A383-CF3B3D393FBD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "vendor", "vendor", "{E2E6CFD3-B71F-4894-9750-1044B1D36C39}"
+	ProjectSection(SolutionItems) = preProject
+		vendor\VimbaNET.dll = vendor\VimbaNET.dll
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

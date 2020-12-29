@@ -12,24 +12,10 @@ namespace ProRunners
 {
     public partial class AgregarPaciente : Form
     {
-        DateTime m_Nacimiento = new DateTime();
         Paciente m_paciente = null;
         public AgregarPaciente()
         {
             InitializeComponent();
-        }
-
-        private void txt_Date_TextChanged(object sender, EventArgs e)
-        {
-            if(DateTime.TryParse(txt_Date.Text, out m_Nacimiento))
-            {
-                lbl_Date.ForeColor = Color.Black;
-                btn_Aceptar.Enabled = lbl_Nombre.ForeColor == Color.Black;
-            }
-            else
-            {
-                lbl_Date.ForeColor = Color.Red;
-            }
         }
 
         private void txt_Name_TextChanged(object sender, EventArgs e)
@@ -52,7 +38,7 @@ namespace ProRunners
         private void btn_Aceptar_Click(object sender, EventArgs e)
         {
             m_paciente = new Paciente();
-            m_paciente.Nacimiento = m_Nacimiento;
+            m_paciente.Nacimiento = date.Value;
             m_paciente.Nombre = Auxiliares.RebuildName(txt_Name.Text);
             m_paciente.SesionesVideo = new List<DateTime>();
             m_paciente.SesionesFoto = new List<DateTime>();
@@ -67,6 +53,12 @@ namespace ProRunners
         public Paciente GetPaciente()
         {
             return m_paciente;
+        }
+
+        private void date_ValueChanged(object sender, EventArgs e)
+        {            
+            lbl_Date.ForeColor = Color.Black;
+            btn_Aceptar.Enabled = lbl_Nombre.ForeColor == Color.Black;
         }
     }
 }

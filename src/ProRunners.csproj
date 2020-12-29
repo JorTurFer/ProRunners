@@ -53,6 +53,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\uEyeDotNet.dll</HintPath>
     </Reference>
+    <Reference Include="VimbaNET, Version=1.8.3.29465, Culture=neutral, PublicKeyToken=96b729f24f119b9a, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\VimbaNET.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgregarPaciente.cs">
@@ -61,12 +65,17 @@
     <Compile Include="AgregarPaciente.Designer.cs">
       <DependentUpon>AgregarPaciente.cs</DependentUpon>
     </Compile>
+    <Compile Include="AlliedVision\AlliedVisionCamera.cs" />
+    <Compile Include="AlliedVision\AlliedVisionPixelFormat.cs" />
+    <Compile Include="AlliedVision\CameraInfo.cs" />
+    <Compile Include="AlliedVision\RingBitmap.cs" />
     <Compile Include="Almacenamiento.cs" />
     <Compile Include="Auxiliares.cs" />
     <Compile Include="Camera.cs" />
+    <Compile Include="IDS\IDSCamera.cs" />
     <Compile Include="CameraMgr.cs" />
     <Compile Include="Directorios.cs" />
-    <Compile Include="FrameRecivedEventArgs.cs" />
+    <Compile Include="FrameEventArgs.cs" />
     <Compile Include="GrabarForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -100,6 +109,7 @@
     <Compile Include="TomasForm.Designer.cs">
       <DependentUpon>TomasForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="AlliedVision\VimbaHelper.cs" />
     <EmbeddedResource Include="AgregarPaciente.resx">
       <DependentUpon>AgregarPaciente.cs</DependentUpon>
     </EmbeddedResource>
@@ -153,5 +163,6 @@
       <Name>SharpAvi</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

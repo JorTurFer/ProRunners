@@ -9,15 +9,39 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace ProRunners
 {
-    enum CameraIndex
+    public enum CameraIndex
     {
       All,
       Cam1,
       Cam2
     }
-    
+
+    public enum CameraType
+    {
+        None,
+        IDS,
+        AlliedVision
+    }
+
     static class Auxiliares
     {
+        public static Camera CameraFactory(CameraIndex DeviceID)
+        {
+            var cameraType = DeviceID == CameraIndex.Cam1 ? Properties.Settings.Default.Camera1 : Properties.Settings.Default.Camera2;
+            Enum.TryParse(cameraType, out CameraType type);
+
+            switch (type)
+            {
+                case CameraType.AlliedVision:
+                    return new AlliedVision.AlliedVisionCamera(DeviceID);
+                case CameraType.IDS:
+                    return new IDS.IDSCamera(DeviceID);
+                default:
+                    return null;
+            }
+        }
+
+
         public static string RebuildName(string strInput)
         {
             StringBuilder sb = new StringBuilder();

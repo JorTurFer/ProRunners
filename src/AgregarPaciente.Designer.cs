@@ -32,9 +32,9 @@
             this.lbl_Nombre = new System.Windows.Forms.Label();
             this.lbl_Date = new System.Windows.Forms.Label();
             this.txt_Name = new System.Windows.Forms.TextBox();
-            this.txt_Date = new System.Windows.Forms.TextBox();
             this.btn_Aceptar = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
+            this.date = new System.Windows.Forms.DateTimePicker();
             this.SuspendLayout();
             // 
             // lbl_Nombre
@@ -65,18 +65,10 @@
             this.txt_Name.TabIndex = 2;
             this.txt_Name.TextChanged += new System.EventHandler(this.txt_Name_TextChanged);
             // 
-            // txt_Date
-            // 
-            this.txt_Date.Location = new System.Drawing.Point(12, 70);
-            this.txt_Date.Name = "txt_Date";
-            this.txt_Date.Size = new System.Drawing.Size(199, 20);
-            this.txt_Date.TabIndex = 3;
-            this.txt_Date.TextChanged += new System.EventHandler(this.txt_Date_TextChanged);
-            // 
             // btn_Aceptar
             // 
             this.btn_Aceptar.Enabled = false;
-            this.btn_Aceptar.Location = new System.Drawing.Point(136, 102);
+            this.btn_Aceptar.Location = new System.Drawing.Point(136, 106);
             this.btn_Aceptar.Name = "btn_Aceptar";
             this.btn_Aceptar.Size = new System.Drawing.Size(75, 23);
             this.btn_Aceptar.TabIndex = 4;
@@ -86,7 +78,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(12, 102);
+            this.button2.Location = new System.Drawing.Point(12, 106);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 5;
@@ -94,15 +86,25 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // date
+            // 
+            this.date.Location = new System.Drawing.Point(12, 70);
+            this.date.MaxDate = new System.DateTime(2100, 12, 31, 0, 0, 0, 0);
+            this.date.MinDate = new System.DateTime(1920, 1, 1, 0, 0, 0, 0);
+            this.date.Name = "date";
+            this.date.Size = new System.Drawing.Size(200, 20);
+            this.date.TabIndex = 6;
+            this.date.ValueChanged += new System.EventHandler(this.date_ValueChanged);
+            // 
             // AgregarPaciente
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(220, 137);
+            this.ClientSize = new System.Drawing.Size(220, 140);
             this.ControlBox = false;
+            this.Controls.Add(this.date);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.btn_Aceptar);
-            this.Controls.Add(this.txt_Date);
             this.Controls.Add(this.txt_Name);
             this.Controls.Add(this.lbl_Date);
             this.Controls.Add(this.lbl_Nombre);
@@ -121,8 +123,8 @@
         private System.Windows.Forms.Label lbl_Nombre;
         private System.Windows.Forms.Label lbl_Date;
         private System.Windows.Forms.TextBox txt_Name;
-        private System.Windows.Forms.TextBox txt_Date;
         private System.Windows.Forms.Button btn_Aceptar;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.DateTimePicker date;
     }
 }

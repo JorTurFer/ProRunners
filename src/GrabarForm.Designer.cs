@@ -45,7 +45,7 @@
             this.pict_Photo = new System.Windows.Forms.PictureBox();
             this.pict_Grab = new System.Windows.Forms.PictureBox();
             this.rB_B = new System.Windows.Forms.RadioButton();
-            this.rb_A = new System.Windows.Forms.RadioButton();
+            this.rB_A = new System.Windows.Forms.RadioButton();
             this.rB_2 = new System.Windows.Forms.RadioButton();
             this.MemoryTimer = new System.Windows.Forms.Timer(this.components);
             this.lbl_Counters = new System.Windows.Forms.Label();
@@ -113,7 +113,7 @@
             this.groupBox1.Controls.Add(this.pict_Photo);
             this.groupBox1.Controls.Add(this.pict_Grab);
             this.groupBox1.Controls.Add(this.rB_B);
-            this.groupBox1.Controls.Add(this.rb_A);
+            this.groupBox1.Controls.Add(this.rB_A);
             this.groupBox1.Controls.Add(this.rB_2);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
@@ -230,13 +230,13 @@
             // 
             // rb_A
             // 
-            this.rb_A.AutoSize = true;
-            this.rb_A.Location = new System.Drawing.Point(149, 54);
-            this.rb_A.Name = "rb_A";
-            this.rb_A.Size = new System.Drawing.Size(70, 17);
-            this.rb_A.TabIndex = 3;
-            this.rb_A.Text = "Cámara 1";
-            this.rb_A.UseVisualStyleBackColor = true;
+            this.rB_A.AutoSize = true;
+            this.rB_A.Location = new System.Drawing.Point(149, 54);
+            this.rB_A.Name = "rb_A";
+            this.rB_A.Size = new System.Drawing.Size(70, 17);
+            this.rB_A.TabIndex = 3;
+            this.rB_A.Text = "Cámara 1";
+            this.rB_A.UseVisualStyleBackColor = true;
             // 
             // rB_2
             // 
@@ -307,7 +307,7 @@
         private System.Windows.Forms.PictureBox pict_Cam1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton rB_B;
-        private System.Windows.Forms.RadioButton rb_A;
+        private System.Windows.Forms.RadioButton rB_A;
         private System.Windows.Forms.RadioButton rB_2;
         private System.Windows.Forms.PictureBox pict_Photo;
         private System.Windows.Forms.PictureBox pict_Grab;

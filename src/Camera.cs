@@ -1,274 +1,72 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Linq;
 using System.Threading;
 
 namespace ProRunners
 {
-  class Camera : IDisposable
-  {
-    #region IDisposable Support
-    private bool disposedValue = false; // Para detectar llamadas redundantes
-
-    protected virtual void Dispose(bool disposing)
+    public abstract class Camera : IDisposable
     {
-      if (!disposedValue)
-      {
-        if (disposing)
+        private bool disposedValue;
+
+        public CameraIndex ID { get; protected set; }
+        public bool Ready { get; set; }
+        public AutoResetEvent AccionTerminada { get; set; }
+        protected enum Acciones
         {
-          m_eventoSalir.Set();
+            Init,
+            Foto,
+            StartVideo,
+            StopVideo,
+            SetFormatVideo,
+            SetFormatPhoto
         }
 
-        disposedValue = true;
-      }
-    }
+        public delegate void FrameRecivedEventHandler(object sender,FrameEventArgs e);
+        public event FrameRecivedEventHandler FrameReviced;
 
-    // Este código se agrega para implementar correctamente el patrón descartable.
-    public void Dispose()
-    {
-      Dispose(true);
-    }
-    #endregion
-
-    enum Acciones
-    {
-      Init,
-      Foto,
-      StartVideo,
-      StopVideo,
-      SetFormatVideo,
-      SetFormatPhoto
-    }
-
-    Thread m_threadCiclo;
-    ManualResetEvent m_eventoSalir = new ManualResetEvent(false);
-    AutoResetEvent m_eventoAccion = new AutoResetEvent(false);
-    public AutoResetEvent AccionTerminada { get; set; }
-    uEye.Camera m_Camera;
-
-    static uEye.Types.CameraInformation[] m_cameraList;
-
-    public CameraIndex ID { get; private set; }
-    int m_DeviceID;
-    int m_FrameCount;
-    int m_nMemoryID = -1;
-    ImageFormat m_lastFormat;
-
-    Queue<Acciones> m_queueAcciones = new Queue<Acciones>();
-
-    string m_strPath = "";
-    bool m_bSnapShot = false;
-
-    public delegate void FrameRecivedEventHandler(FrameRecivedEventArgs e);
-    public event FrameRecivedEventHandler FrameReviced;
-    protected virtual void OnFrameRecived(FrameRecivedEventArgs e)
-    {
-      if (m_bSnapShot)
-      {
-        m_bSnapShot = false;
-        m_Camera.Acquisition.Stop();
-      }
-
-      FrameReviced?.Invoke(e);
-    }
-
-    public Camera(CameraIndex DevideID)
-    {
-      ID = DevideID;
-      Ready = false;
-      AccionTerminada = new AutoResetEvent(false);
-
-      //Si no he obtenido la lista de camaras, la obtengo
-      if (m_cameraList == null || m_cameraList.Length == 0)
-        uEye.Info.Camera.GetCameraList(out m_cameraList);
-      
-      if(m_cameraList.Length == 0)
-      {
-        MessageBox.Show("No se han encontrado camaras...");
-      }
-      m_Camera = new uEye.Camera();
-      m_DeviceID = (int)m_cameraList.Where(x => x.CameraID == (int)DevideID).FirstOrDefault().DeviceID;
-      EnqueueAction(Acciones.Init);
-      m_threadCiclo = new Thread(Cycle);
-      m_threadCiclo.IsBackground = true;
-      m_threadCiclo.Name = $"Camera {DevideID} thread";
-      m_threadCiclo.Start();
-    }
-
-    private void Cycle()
-    {
-      WaitHandle[] waitevents = new WaitHandle[2];
-      waitevents[0] = m_eventoAccion;
-      waitevents[1] = m_eventoSalir;
-
-      bool bSeguir = true;
-
-      while (bSeguir)
-      {
-        int nEvent = WaitHandle.WaitAny(waitevents, 500);
-
-        if (nEvent == 0)
+        public Camera(CameraIndex DevideID)
         {
-          if (m_queueAcciones.Count == 0)
-            continue;
-          Acciones acc = m_queueAcciones.Dequeue();
-          switch (acc)
-          {
-            case Acciones.Init:
-              Init();
-
-              break;
-            case Acciones.Foto:
-              m_bSnapShot = true;
-              m_Camera.Acquisition.Capture();
-              break;
-            case Acciones.StartVideo:
-              m_Camera.Acquisition.Capture();
-              break;
-            case Acciones.StopVideo:
-              m_Camera.Acquisition.Stop();
-              break;
-            case Acciones.SetFormatPhoto:
-              SetImageFormat(ImageFormat.Foto);
-              break;
-            case Acciones.SetFormatVideo:
-              SetImageFormat(Properties.Settings.Default.VideoFormat.ToImageFormat());
-              break;
-          }
-          AccionTerminada.Set();
-        }
-        else if (nEvent == 1)
-        {
-          bSeguir = false;
-        }
-      }
-      m_Camera.Exit();
-    }
-
-    private void EnqueueAction(Acciones acc)
-    {
-      AccionTerminada.Reset();
-      m_queueAcciones.Enqueue(acc);
-      m_eventoAccion.Set();
-    }
-
-    private void Init()
-    {
-      uEye.Defines.Status statusRet;
-      statusRet = initCamera();
-
-      if (statusRet == uEye.Defines.Status.SUCCESS)
-      {
-        // start capture
-        if (statusRet != uEye.Defines.Status.SUCCESS)
-        {
-          MessageBox.Show("Starting live video failed");
-        }
-      }
-
-      // cleanup on any camera error
-      if (statusRet != uEye.Defines.Status.SUCCESS && m_Camera.IsOpened)
-      {
-        m_Camera.Exit();
-      }
-    }
-
-    private uEye.Defines.Status initCamera()
-    {
-      uEye.Defines.Status statusRet = m_Camera.Init(m_DeviceID | (Int32)uEye.Defines.DeviceEnumeration.UseDeviceID, IntPtr.Zero);
-      if (statusRet != uEye.Defines.Status.SUCCESS)
-      {
-        MessageBox.Show("Initializing the camera failed");
-        return statusRet;
-      }
-      uEye.DeviceFeatureJpegCompression compressor = new uEye.DeviceFeatureJpegCompression(m_Camera);
-      compressor.Set(100);
-      uEye.ColorConverter conv = new uEye.ColorConverter(m_Camera);
-      conv.Set(uEye.Defines.ColorMode.BGR8Packed, uEye.Defines.ColorConvertMode.Jpeg);
-
-      SetImageFormat(ImageFormat.Foto);
-      // set event
-      m_Camera.EventFrame += onFrameEvent;
-
-      Ready = true;
-
-      return statusRet;
-    }
-
-    private void onFrameEvent(object sender, EventArgs e)
-    {
-      // convert sender object to our camera object
-      uEye.Camera camera = sender as uEye.Camera;
-
-      if (camera.IsOpened)
-      {
-        uEye.Defines.DisplayMode mode;
-        camera.Display.Mode.Get(out mode);
-
-        // only display in dib mode
-        if (mode == uEye.Defines.DisplayMode.DiB)
-        {
-          Int32 s32MemID;
-          camera.Memory.GetActive(out s32MemID);
-          camera.Memory.Lock(s32MemID);
-
-          // do any drawings?
-
-          Bitmap bitmap;
-          m_Camera.Memory.ToBitmap(s32MemID, out bitmap);
-          FrameRecivedEventArgs fe = new FrameRecivedEventArgs();
-          fe.frame = bitmap;
-          OnFrameRecived(fe);
-          camera.Memory.Unlock(s32MemID);
-
-          ++m_FrameCount;
-        }
-      }
-    }
-
-    private void SetImageFormat(ImageFormat formato)
-    {
-      if (m_lastFormat != formato)
-      {
-        if (m_nMemoryID != -1)
-        {
-          m_Camera.Memory.Free(m_nMemoryID);
+            ID = DevideID;
+            AccionTerminada = new AutoResetEvent(false);
         }
 
-        m_Camera.Size.ImageFormat.Set((uint)formato);
-        m_Camera.Memory.Allocate(out m_nMemoryID, true);
-        m_lastFormat = formato;
-      }
-    }
+        protected virtual void OnNewFrame(object sender, FrameEventArgs e)
+        {
+            FrameReviced?.Invoke(sender,e);
+            //ImageReleased();
+        }
 
-    public void StartGrab(string strPath)
-    {
-      m_strPath = strPath;
-      EnqueueAction(Acciones.StartVideo);
-    }
+        public abstract void StartGrab(string strPath);
 
-    public void StopGrab()
-    {
-      EnqueueAction(Acciones.StopVideo);
-    }
+        public abstract void StopGrab();
 
-    public void SetVideo()
-    {
-      EnqueueAction(Acciones.SetFormatVideo);
-    }
+        public abstract void SetVideo();
 
-    public void SetPhoto()
-    {
-      EnqueueAction(Acciones.SetFormatPhoto);
-    }
+        public abstract void SetPhoto();
 
-    public void TakeSnapshot()
-    {
-      EnqueueAction(Acciones.Foto);
-    }
+        public abstract void TakeSnapshot();
 
-    public bool Ready { get; set; }
-  }
+        //public abstract void ImageReleased();
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    DisposeResources();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        protected abstract void DisposeResources();
+    }
 }
